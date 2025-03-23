@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DQXLauncher (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "DQXLauncher (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

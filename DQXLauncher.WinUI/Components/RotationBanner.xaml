@@ -1,0 +1,41 @@
+﻿<UserControl
+    x:Class="DQXLauncher.Components.RotationBanner"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DQXLauncher.Components"
+    xmlns:hiroba="using:DQXLauncher.Core.Hiroba"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="157"
+    d:DesignWidth="632">
+    <UserControl.Resources>
+        <ThemeShadow x:Key="CardShadow"/>
+    </UserControl.Resources>
+    
+    <Border
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            CornerRadius="12"
+            Margin="12"
+            BorderThickness="1"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            Shadow="{StaticResource CardShadow}">
+        <Grid>
+            <ProgressRing Name="ProgressRing" Visibility="Visible" IsIndeterminate="True" IsActive="True" />
+            <FlipView Name="FlipView" Margin="0" Visibility="Collapsed" Height="157" Width="632">
+                <FlipView.ItemTemplate>
+                    <DataTemplate x:DataType="hiroba:BannerImage">
+                        <Viewbox Stretch="Uniform">
+                            <Button Background="transparent" BorderThickness="0" Padding="0" Click="Banner_Click">
+                                <Image Source="{x:Bind Src}" Stretch="UniformToFill"
+                               Height="157" Width="632"
+                               AutomationProperties.Name="{x:Bind Alt}" />
+                            </Button>
+                        </Viewbox>
+                    </DataTemplate>
+                </FlipView.ItemTemplate>
+            </FlipView>
+            <PipsPager />
+        </Grid>
+    </Border>
+</UserControl>
