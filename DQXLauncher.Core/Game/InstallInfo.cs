@@ -2,7 +2,7 @@
 
 namespace DQXLauncher.Core.Game;
 
-public class InstallInfo
+public static class InstallInfo
 {
     private static readonly string RegistryPrefix =
         "HKEY_LOCAL_MACHINE\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\";
