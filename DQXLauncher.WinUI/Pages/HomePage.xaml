@@ -11,24 +11,47 @@
         <ThemeShadow x:Key="CardShadow"/>
     </Page.Resources>
 
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <components:RotationBanner Height="157" Width="632" />
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button Click="CRC_User">Calculate CRC of User</Button>
-            <Border
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                CornerRadius="12"
-                Padding="24"
-                Margin="12"
-                BorderThickness="1"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                Shadow="{StaticResource CardShadow}">
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBox x:Name="Username" />
-                    <TextBox x:Name="Password" />
+    <Grid Margin="10,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <components:RotationBanner Grid.Row="0" Grid.ColumnSpan="2" />
+        <ListView Grid.Row="1">
+            <ListViewItem>
+                <TextBlock>Menu Item 1</TextBlock>
+            </ListViewItem>
+            <ListViewItem>
+                <TextBlock>Menu Item 1</TextBlock>
+            </ListViewItem>
+            <ListViewItem>
+                <TextBlock>Menu Item 1</TextBlock>
+            </ListViewItem>
+            <ListViewItem>
+                <TextBlock>Menu Item 1</TextBlock>
+            </ListViewItem>
+        </ListView>
+        <Border
+            Grid.Row="1"
+            Grid.Column="1"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            CornerRadius="12"
+            Padding="12"
+            Margin="12"
+            BorderThickness="1"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            Shadow="{StaticResource CardShadow}">
+                <StackPanel  HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="10">
+                    <TextBox x:Name="Username" PlaceholderText="Username" />
+                    <PasswordBox x:Name="Password" PlaceholderText="Password" />
+                    <CheckBox />
                     <Button x:Name="Submit" Click="Submit_Click">Login</Button>
                 </StackPanel>
             </Border>
-        </StackPanel>
-    </StackPanel>
+    </Grid>
 </Page>

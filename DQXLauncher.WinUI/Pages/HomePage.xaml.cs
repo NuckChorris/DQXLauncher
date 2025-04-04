@@ -18,8 +18,9 @@ namespace DQXLauncher.Pages
         private async void Submit_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             var login = new GuestLoginStrategy();
-            var auth = await login.Login(Username.Text, Password.Text);
-            var sessionId = login.EncodeSessionId(auth);
+            //var auth = await login.Login(Username.Text, Password.Text);
+            //var sessionId = login.EncodeSessionId(auth);
+            var sessionId = "string";
             var startupToken = StartupToken.GetStartupToken();
             var gamePath = Path.Combine(InstallInfo.Location, "game", "DQXGame.exe");
             Process process = new Process();
@@ -36,5 +37,6 @@ namespace DQXLauncher.Pages
             var crc = BitConverter.ToString(Crc32.Compute(user));
             Username.Text = $"{BitConverter.ToString(user)}={crc}";
         }
+
     }
 }
