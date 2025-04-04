@@ -1,14 +1,15 @@
-﻿using DQXLauncher.Core.Utils;
+﻿using DQXLauncher.Core.Utils.WebClient;
 using HtmlAgilityPack;
 
 namespace DQXLauncher.Core.Game.LoginStrategy;
 
 public abstract class LoginStrategy
 {
-    protected string LOGIN_URL = "https://dqx-login.square-enix.com/oauth/sp/sso/dqxwin/login?client_id=dqx_win&redirect_uri=https%3a%2f%2fdqx%2dlogin%2esquare%2denix%2ecom%2f&response_type=code";
-    protected async Task<HtmlDocument> GetLoginDocument(Dictionary<string, string> payload)
+    protected static readonly string LOGIN_URL = "https://dqx-login.square-enix.com/oauth/sp/sso/dqxwin/login?client_id=dqx_win&redirect_uri=https%3a%2f%2fdqx%2dlogin%2esquare%2denix%2ecom%2f&response_type=code";
+    
+    protected async Task<WebForm> GetLoginForm(Dictionary<string, string> payload)
     {
-        var httpClient = await GetHttpClient();
+        var httpClient = await GetWebClient();
         var request = new HttpRequestMessage(HttpMethod.Post, LOGIN_URL);
 
         request.Content = new FormUrlEncodedContent(payload);
@@ -16,13 +17,13 @@ public abstract class LoginStrategy
         var doc = new HtmlDocument();
         var response = await httpClient.SendAsync(request);
         doc.LoadHtml(await response.Content.ReadAsStringAsync());
-
-        // TODO: we should check that the URL didn't redirect and pass it out to use for absolutization
-        return doc;
+        
+        var form = doc.DocumentNode.SelectSingleNode("//form[@name='mainForm']");
+        return WebForm.FromHtmlForm(form, request.RequestUri!);
     }
     
-    protected Task<HttpClient> GetHttpClient()
+    protected Task<WebClient> GetWebClient()
     {
-        return WebClient.GetHttpClient($"oauth-{this.GetType().Name}");
+        return WebClient.Get($"oauth-{this.GetType().Name}");
     }
 }
