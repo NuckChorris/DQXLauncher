@@ -11,6 +11,7 @@ using WinUIEx;
 using System.Runtime.InteropServices;
 using WinRT.Interop;
 using DQXLauncher.Utils;
+using Windows.Gaming.Input;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -20,7 +21,7 @@ namespace DQXLauncher
 {
     public sealed partial class MainWindow : WinUIEx.WindowEx
     {
-
+        private List<Gamepad> _gamepads = new();
         public double TitleBarHeight => AppWindow.TitleBar.Height;
         public double TitleBarRightInset => AppWindow.TitleBar.RightInset;
         public double TitleBarLeftInset => AppWindow.TitleBar.LeftInset;
@@ -54,6 +55,15 @@ namespace DQXLauncher
             {
                 ResizeToFit();
             }
+        }
+
+        private void Gamepad_GamepadAdded(object sender, Gamepad gamepad)
+        {
+            if (!_gamepads.Contains(gamepad)) _gamepads.Add(gamepad);
+        }
+
+        private void Gamepad_GamepadRemoved(object sender, Gamepad gamepad) {
+            if (_gamepads.Contains(gamepad)) _gamepads.Remove(gamepad);
         }
 
         private async void myButton_Click(object sender, RoutedEventArgs e)
