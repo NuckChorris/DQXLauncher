@@ -1,16 +1,28 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DQXLauncher.Core.Utils;
+namespace DQXLauncher.Core.Utils.WebClient;
 
 /// <summary>
 /// Provides an HttpClient configured to use a cookie jar and roughly emulate the behavior of the original launcher's
 /// WebViews.
 /// </summary>
-public class WebClient
+public class WebClient : HttpClient
 {
-    private static readonly ConcurrentDictionary<string, Task<HttpClient>> HttpClients = new ConcurrentDictionary<string, Task<HttpClient>>();
+    private static readonly ConcurrentDictionary<string, Task<WebClient>> Clients = new ConcurrentDictionary<string, Task<WebClient>>();
+
+    private WebClient(HttpMessageHandler handler) : base(handler)
+    {
+        DefaultRequestHeaders.Add("Cache-Control", "max-age=0");
+        DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+        DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+        DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
+        DefaultRequestHeaders.Add("Accept-Language", "en-US");
+        // I wish I were making this up lmao
+        DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"User-Agent: SQEXAuthor/2.0.0(Windows 6.2; ja-jp; {MakeComputerId()})");
+    }
     
     /// <summary>
     /// Get an HttpClient configured to use a cookie jar with the given key. If one already exists for the given key, it
@@ -18,25 +30,22 @@ public class WebClient
     /// </summary>
     /// <param name="key">The name of the cookie jar to use</param>
     /// <returns>The HttpClient to use</returns>
-    public static async Task<HttpClient> GetHttpClient(string key = "default")
+    public static async Task<WebClient> Get(string key = "default")
     {
-        return await HttpClients.GetOrAdd(key, BuildHttpClient);
+        return await Clients.GetOrAdd(key, Build);
     }
     
-    private static async Task<HttpClient> BuildHttpClient(string key = "default")
+    private static async Task<WebClient> Build(string key = "default")
     {
         var handler = await CookieJar.HandlerForJar(new HttpClientHandler(), key);
-        var client = new HttpClient(handler);
-        
-        client.DefaultRequestHeaders.Add("Cache-Control", "max-age=0");
-        client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
-        client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
-        client.DefaultRequestHeaders.Add("Accept-Language", "en-US");
-        // I wish I were making this up lmao
-        client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"User-Agent: SQEXAuthor/2.0.0(Windows 6.2; ja-jp; {MakeComputerId()})");
-        client.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
-        
-        return client;
+        return new WebClient(handler);
+    }
+
+    public async Task<HttpResponseMessage> SendFormAsync(WebForm form)
+    {
+        var request = new HttpRequestMessage(form.Method, form.Action);
+        request.Content = new FormUrlEncodedContent(form.Fields);
+        return await SendAsync(request);
     }
     
     /// <summary>
