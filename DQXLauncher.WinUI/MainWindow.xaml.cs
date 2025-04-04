@@ -13,8 +13,11 @@ namespace DQXLauncher
         public MainWindow()
         {
             this.InitializeComponent();
-            this.SetTitleBar(AppTitleBar);
+            this.SetIsResizable(false);
+            this.SetIsMaximizable(false);
+            this.SetTitleBar(TitleBar);
             this.ExtendsContentIntoTitleBar = true;
+            AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
             AppFrame.Navigate(typeof(HomePage));
         }
 
