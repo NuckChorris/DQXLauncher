@@ -6,7 +6,8 @@ using DQXLauncher.Core.Game;
 using DQXLauncher.Core.Game.LoginStrategy;
 using DQXLauncher.Core.Utils;
 using Microsoft.UI.Xaml.Controls;
-namespace DQXLauncher.Pages
+
+namespace DQXLauncher.Views.Pages
 {
     public sealed partial class HomePage : Page
     {
