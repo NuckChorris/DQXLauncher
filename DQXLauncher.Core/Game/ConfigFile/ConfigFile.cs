@@ -11,6 +11,7 @@ public class InvalidConfigException(string fileName, string fileContents) : Exce
 
 public abstract class ConfigFile : IDisposable
 {
+    protected virtual string DefaultContents => string.Empty;
     public static string RootDirectory { get; set; } = Environment.CurrentDirectory;
     public readonly string Filename;
     private readonly Stream _fileStream;
@@ -27,10 +28,7 @@ public abstract class ConfigFile : IDisposable
             Directory.CreateDirectory(dir);
         }
 
-        _fileStream = access == FileAccess.Read
-            ? new FileStream(Filename, FileMode.Open, access, FileShare.Read)
-            : new FileStream(Filename, FileMode.Create, access, FileShare.None);
-        
+        _fileStream = new FileStream(Filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
         _obfuscatorStream = obfuscatorFactory(_fileStream);
     }
 
@@ -40,9 +38,19 @@ public abstract class ConfigFile : IDisposable
         _fileStream.Dispose();
     }
 
-    public async Task Load()
+    public virtual async Task Load()
     {
         _obfuscatorStream.Position = 0;
+        
+        // Write our default value if it's empty
+        if (_fileStream.Length == 0)
+        {
+            await using var writer = new StreamWriter(_obfuscatorStream, leaveOpen: true);
+            await writer.WriteAsync(DefaultContents);
+            await writer.FlushAsync();
+            _obfuscatorStream.Position = 0;
+        }
+        
         Document = await Task.Run(() => XDocument.Load(_obfuscatorStream));
     }
     
@@ -52,7 +60,7 @@ public abstract class ConfigFile : IDisposable
         Document?.Save(_obfuscatorStream);
         await _obfuscatorStream.FlushAsync();
     }
-
+    
     protected InvalidConfigException Invalid()
     {
         _obfuscatorStream.Position = 0;
