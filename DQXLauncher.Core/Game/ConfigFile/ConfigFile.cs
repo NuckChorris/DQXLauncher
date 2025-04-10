@@ -17,9 +17,9 @@ public abstract class ConfigFile : IDisposable
     private readonly Stream _obfuscatorStream;
     public XDocument? Document;
 
-    protected ConfigFile(string filename, Func<Stream, Stream> obfuscatorFactory, FileAccess access)
+    protected ConfigFile(string filename, int seed, Func<Stream, Stream> obfuscatorFactory)
     {
-        var obfuscatedName = FilenameObfuscator.Obfuscate(filename);
+        var obfuscatedName = FilenameObfuscator.Obfuscate(filename, seed);
         Filename = Path.Combine(RootDirectory, obfuscatedName);
 
         if (Path.GetDirectoryName(Filename) is { } dir)
