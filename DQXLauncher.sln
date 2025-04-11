@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.Core.Tests", "D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.WinUI", "DQXLauncher.WinUI\DQXLauncher.WinUI.csproj", "{EF15F8BB-2B23-2E6D-70CD-2F90FE1E6685}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.Toolbox", "DQXLauncher.Toolbox\DQXLauncher.Toolbox.csproj", "{93266E0B-6475-428A-89C7-15055BF67682}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -61,6 +63,24 @@ Global
 		{EF15F8BB-2B23-2E6D-70CD-2F90FE1E6685}.Release|x86.ActiveCfg = Release|x86
 		{EF15F8BB-2B23-2E6D-70CD-2F90FE1E6685}.Release|x86.Build.0 = Release|x86
 		{EF15F8BB-2B23-2E6D-70CD-2F90FE1E6685}.Release|x86.Deploy.0 = Release|x86
+		{93266E0B-6475-428A-89C7-15055BF67682}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Debug|ARM64.Build.0 = Debug|ARM64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Debug|x64.ActiveCfg = Debug|x64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Debug|x64.Build.0 = Debug|x64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Debug|x64.Deploy.0 = Debug|x64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Debug|x86.ActiveCfg = Debug|x86
+		{93266E0B-6475-428A-89C7-15055BF67682}.Debug|x86.Build.0 = Debug|x86
+		{93266E0B-6475-428A-89C7-15055BF67682}.Debug|x86.Deploy.0 = Debug|x86
+		{93266E0B-6475-428A-89C7-15055BF67682}.Release|ARM64.ActiveCfg = Release|ARM64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Release|ARM64.Build.0 = Release|ARM64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Release|ARM64.Deploy.0 = Release|ARM64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Release|x64.ActiveCfg = Release|x64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Release|x64.Build.0 = Release|x64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Release|x64.Deploy.0 = Release|x64
+		{93266E0B-6475-428A-89C7-15055BF67682}.Release|x86.ActiveCfg = Release|x86
+		{93266E0B-6475-428A-89C7-15055BF67682}.Release|x86.Build.0 = Release|x86
+		{93266E0B-6475-428A-89C7-15055BF67682}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
