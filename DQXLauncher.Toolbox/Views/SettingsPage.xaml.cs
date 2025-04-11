@@ -45,7 +45,7 @@ public sealed partial class SettingsPage
             FileTypeFilter = { "*" }
         };
 
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle((App.Current as App).AppWindow);
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.AppWindow);
         WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 
         var folder = await picker.PickSingleFolderAsync();

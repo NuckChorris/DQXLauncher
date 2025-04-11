@@ -26,6 +26,8 @@ namespace DQXLauncher.Toolbox
     /// </summary>
     public partial class App : Application
     {
+        public static Window? AppWindow; 
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -44,7 +46,5 @@ namespace DQXLauncher.Toolbox
             AppWindow = new MainWindow();
             AppWindow.Activate();
         }
-
-        public Window? AppWindow;
     }
 }
