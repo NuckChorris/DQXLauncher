@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using DQXLauncher.Toolbox.Views;
 
 namespace DQXLauncher.Toolbox
 {

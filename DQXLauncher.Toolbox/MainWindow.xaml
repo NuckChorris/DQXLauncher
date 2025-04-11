@@ -10,7 +10,7 @@
     Title="DQXLauncher.Toolbox">
     
     <Window.SystemBackdrop><MicaBackdrop /></Window.SystemBackdrop>
-    <NavigationView x:Name="NavView" SelectionChanged="NavView_SelectionChanged" PaneDisplayMode="Left">
+    <NavigationView x:Name="NavView" SelectionChanged="NavView_SelectionChanged" PaneDisplayMode="Left" IsBackButtonVisible ="Collapsed">
         <NavigationView.MenuItems>
             <NavigationViewItem Content="Home" Icon="Home" Tag="HomePage" />
             <NavigationViewItem Content="Save Explorer" Icon="Folder" Tag="SaveExplorerPage" />
