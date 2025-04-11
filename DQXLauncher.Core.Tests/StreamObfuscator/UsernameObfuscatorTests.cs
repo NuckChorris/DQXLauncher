@@ -2,19 +2,19 @@
 
 namespace DQXLauncher.Core.Tests.StreamObfuscator;
 
-public class PlayerListObfuscatorTests
+public class UsernameObfuscatorTests
 {
     [Fact]
     public void Constructor_ShouldThrowArgumentNullException_WhenBaseStreamIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => new PlayerListObfuscator(null!, "emma"));
+        Assert.Throws<ArgumentNullException>(() => new UsernameObfuscator(null!, "emma"));
     }
     
     [Fact]
     public void Constructor_ShouldThrowArgumentNullException_WhenUsernameIsNull()
     {
         using var stream = new MemoryStream();
-        Assert.Throws<ArgumentNullException>(() => new PlayerListObfuscator(stream, null!));
+        Assert.Throws<ArgumentNullException>(() => new UsernameObfuscator(stream, null!));
     }
 
     [Fact]
@@ -28,7 +28,7 @@ public class PlayerListObfuscatorTests
         var expected = "<?xml version=\"1.0\" encoding=\"UTF-8\""u8.ToArray();
 
         using var baseStream = new MemoryStream(input);
-        await using var xorStream = new PlayerListObfuscator(baseStream, "emma");
+        await using var xorStream = new UsernameObfuscator(baseStream, "emma");
 
         var testStream = new MemoryStream();
         await xorStream.CopyToAsync(testStream);
@@ -50,7 +50,7 @@ public class PlayerListObfuscatorTests
         var input = "<?xml version=\"1.0\" encoding=\"UTF-8\""u8.ToArray();
 
         using var baseStream = new MemoryStream(input);
-        await using var xorStream = new PlayerListObfuscator(baseStream, "emma");
+        await using var xorStream = new UsernameObfuscator(baseStream, "emma");
 
         var testStream = new MemoryStream();
         await xorStream.CopyToAsync(testStream);
