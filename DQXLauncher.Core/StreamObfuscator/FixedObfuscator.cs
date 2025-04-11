@@ -11,4 +11,5 @@
 /// <param name="baseStream">The stream to process</param>
 public class FixedObfuscator(Stream baseStream) : XorObfuscator(baseStream, [0xA7])
 {
+    public static Func<Stream, Stream> Factory => (s) => new FixedObfuscator(s);
 }

@@ -21,4 +21,6 @@ public class UsernameObfuscator(Stream baseStream, string username)
         if (username is null) throw new ArgumentNullException(nameof(username));
         return Crc32.Compute(Encoding.ASCII.GetBytes($"{username}\0"));
     }
+    
+    public static Func<Stream, Stream> Factory => (s) => new UsernameObfuscator(s, Environment.UserName);
 }

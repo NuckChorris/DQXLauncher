@@ -2,12 +2,12 @@
 
 namespace DQXLauncher.Core.Tests.StreamObfuscator;
 
-public class ConfigObfuscatorTests
+public class FixedObfuscatorTests
 {
     [Fact]
     public void Constructor_ShouldThrowArgumentNullException_WhenBaseStreamIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => new ConfigObfuscator(null!));
+        Assert.Throws<ArgumentNullException>(() => new FixedObfuscator(null!));
     }
 
     [Fact]
@@ -21,7 +21,7 @@ public class ConfigObfuscatorTests
         var expected = "<?xml version=\"1.0\" encoding=\"UTF-8\""u8.ToArray();
 
         using var baseStream = new MemoryStream(input);
-        await using var xorStream = new ConfigObfuscator(baseStream);
+        await using var xorStream = new FixedObfuscator(baseStream);
 
         var testStream = new MemoryStream();
         await xorStream.CopyToAsync(testStream);
@@ -42,7 +42,7 @@ public class ConfigObfuscatorTests
         ];
         
         using var baseStream = new MemoryStream(input);
-        await using var xorStream = new ConfigObfuscator(baseStream);
+        await using var xorStream = new FixedObfuscator(baseStream);
 
         var testStream = new MemoryStream();
         await xorStream.CopyToAsync(testStream);
