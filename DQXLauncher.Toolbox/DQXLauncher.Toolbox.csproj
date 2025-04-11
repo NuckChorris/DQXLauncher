@@ -10,6 +10,10 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <WindowsPackageType>None</WindowsPackageType>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -45,9 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DQXLauncher.Core\DQXLauncher.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <!--

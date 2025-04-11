@@ -1,9 +1,6 @@
 {
   "profiles": {
-    "DQXLauncher.Toolbox (Package)": {
-      "commandName": "MsixPackage"
-    },
-    "DQXLauncher.Toolbox (Unpackaged)": {
+    "DQXLauncher.Toolbox": {
       "commandName": "Project"
     }
   }
