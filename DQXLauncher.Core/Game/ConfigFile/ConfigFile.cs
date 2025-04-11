@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace DQXLauncher.Core.Game.ConfigFile;
 
-public class InvalidConfigException(string fileName, string fileContents) : Exception($"Invalid config in {fileName}")
+public class InvalidConfigException(string fileContents) : Exception("Invalid config")
 {
     public string FileContents { get; } = fileContents;
 }
@@ -65,6 +65,6 @@ public abstract class ConfigFile : IDisposable
     {
         _obfuscatorStream.Position = 0;
         var reader = new StreamReader(_obfuscatorStream);
-        return new InvalidConfigException(Filename, reader.ReadToEnd());
+        return new InvalidConfigException(reader.ReadToEnd());
     }
 }
