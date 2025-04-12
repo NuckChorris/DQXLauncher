@@ -1,0 +1,44 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+      - release/*
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  core:
+    name: Build & Test Solution
+    runs-on: windows-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🧰 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: 🚀 Restore NuGet Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.sln') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: 📦 Install dependencies
+        run: dotnet restore
+
+      - name: 🛠 Build solution
+        run: dotnet build --no-restore --configuration Release
+
+      - name: 🧪 Run tests with coverage
+        run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
+
