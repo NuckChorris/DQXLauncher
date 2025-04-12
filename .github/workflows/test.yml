@@ -34,3 +34,20 @@ jobs:
       - name: 🧪 Run tests with coverage
         run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
 
+      - name: 🛠 Build release for x64
+        run: dotnet build --no-restore --configuration Release -p:Platform=x64 -p:OutputPath=artifacts/x64
+
+      - name: 🛠 Build release for x86
+        run: dotnet build --no-restore --configuration Release -p:Platform=x86 -p:OutputPath=artifacts/x86
+
+      - name: 📤 Upload x64 artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: DQXLauncher.Toolbox-x64.exe
+          path: artifacts/x64/DQXLauncher.Toolbox.exe
+
+      - name: 📤 Upload x86 artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: DQXLauncher.Toolbox-x86.exe
+          path: artifacts/x86/DQXLauncher.Toolbox.exe
