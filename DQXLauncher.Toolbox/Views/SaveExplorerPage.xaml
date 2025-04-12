@@ -16,12 +16,7 @@
         <TreeView ItemsSource="{x:Bind Items, Mode=OneWay}">
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="vm:SaveExplorerItem">
-                    <TreeViewItem ItemsSource="{x:Bind Children, Mode=OneWay}">
-                        <TreeViewItem.ContextFlyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="Export Deobfuscated" Click="OnExportDeobfuscatedClick" />
-                            </MenuFlyout>
-                        </TreeViewItem.ContextFlyout>
+                    <TreeViewItem ItemsSource="{x:Bind Children, Mode=OneWay}" ContextRequested="UIElement_OnContextRequested">
                         <StackPanel Orientation="Horizontal">
                             <controls:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind IsDirectory}">
                                 <controls:Case Value="True"><SymbolIcon Symbol="Folder" /></controls:Case>
