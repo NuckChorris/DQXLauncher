@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.System;
 using DQXLauncher.Core.Hiroba;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Windows.System.UserProfile;
-using System.Linq;
 
-namespace DQXLauncher.Components;
+namespace DQXLauncher.Views;
 
 public sealed partial class RotationBanner : UserControl
 {

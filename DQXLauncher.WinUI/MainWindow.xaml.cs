@@ -1,21 +1,14 @@
 using System;
 using System.Diagnostics;
 using DQXLauncher.Core.Game.LoginStrategy;
-using DQXLauncher.Pages;
-using Microsoft.Graphics.Display;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using WinUIEx.Messaging;
 using WinUIEx;
-using System.Runtime.InteropServices;
-using WinRT.Interop;
 using DQXLauncher.Utils;
 using Windows.Gaming.Input;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Microsoft.UI.Xaml.Navigation;
+using DQXLauncher.Views;
 
 namespace DQXLauncher
 {
@@ -36,7 +29,7 @@ namespace DQXLauncher
             this.SetTitleBar(TitleBar);
             this.ExtendsContentIntoTitleBar = true;
             AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
-            AppFrame.Navigate(typeof(HomePage));
+            AppFrame.Navigate(typeof(Views.Pages.HomePage));
         }
 
         private void ResizeToFit()

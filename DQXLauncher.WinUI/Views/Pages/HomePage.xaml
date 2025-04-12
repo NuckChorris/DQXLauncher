@@ -2,10 +2,9 @@
     x:Class="DQXLauncher.Views.Pages.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DQXLauncher.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:components="using:DQXLauncher.Components"
+    xmlns:views="using:DQXLauncher.Views"
     mc:Ignorable="d">
     <Page.Resources>
         <ThemeShadow x:Key="CardShadow"/>
@@ -21,7 +20,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <components:RotationBanner Grid.Row="0" Grid.ColumnSpan="2" />
+        <views:RotationBanner Grid.Row="0" Grid.ColumnSpan="2" />
         <ListView Grid.Row="1">
             <ListViewItem>
                 <TextBlock>Menu Item 1</TextBlock>

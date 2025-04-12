@@ -7,7 +7,7 @@
     xmlns:component="using:DQXLauncher.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pages="using:DQXLauncher.Pages"
+    xmlns:views="using:DQXLauncher.Views"
     mc:Ignorable="d"
     Height="400"
     Width="652"
@@ -22,7 +22,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <component:TitleBar x:Name="TitleBar" Grid.Row="0"
+        <views:TitleBar x:Name="TitleBar" Grid.Row="0"
                             TitleBarHeight="{x:Bind TitleBarHeight}"
                             TitleBarRightInset="{x:Bind TitleBarRightInset}"
                             TitleBarLeftInset="{x:Bind TitleBarLeftInset}" />
