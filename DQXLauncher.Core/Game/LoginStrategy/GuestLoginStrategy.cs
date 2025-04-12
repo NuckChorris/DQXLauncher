@@ -1,84 +1,48 @@
-﻿using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using HtmlAgilityPack;
+﻿using System.Diagnostics.Contracts;
+using DQXLauncher.Core.Utils.WebClient;
 
 namespace DQXLauncher.Core.Game.LoginStrategy;
 
 public class GuestLoginStrategy : LoginStrategy
 {
-    public class LoginForm
-    {
-        public required string Action { get; set; }
-        public required Dictionary<string, string> Form { get; set; }
-    }
+    private WebForm? _loginForm;
+    private Type? _expectedActionType;
 
-    public async Task<LoginForm> GetLoginForm()
+    public async Task<LoginStep> Step()
     {
-        var doc = await GetLoginDocument(new Dictionary<string, string>
+        // Load the login form
+        _loginForm = await GetLoginForm(new Dictionary<string, string>
         {
-            { "dqxmode", "3" }
+            { "dqxmode", "3" } // Guest mode
         });
+        
+        // TODO: Handle the case when the login form fails
 
-        var form = doc.DocumentNode.SelectSingleNode("//form[@name='mainForm']");
-        var action = new Uri(new Uri(LOGIN_URL), WebUtility.HtmlDecode(form.GetAttributeValue("action", "")));
-        return new LoginForm
-        {
-            Action = action.ToString(),
-            Form = form
-                .Descendants("input")
-                .ToDictionary(
-                    node => node.GetAttributeValue("name", ""),
-                    node => node.GetAttributeValue("value", "")
-                )
-        };
+        _expectedActionType = typeof(UsernamePasswordAction);
+        return new AskUsernamePassword();
     }
 
-    public async Task<string> Login(string username, string password)
+    public async Task<LoginStep> Step(UsernamePasswordAction action)
     {
-        var httpClient = await GetHttpClient();
-        var loginForm = await GetLoginForm();
+        Contract.Assert(_expectedActionType == typeof(UsernamePasswordAction));
+        Contract.Assert(_loginForm is not null);
 
-        var request = new HttpRequestMessage(HttpMethod.Post, loginForm.Action);
+        var web = await GetWebClient();
         
-        loginForm.Form["sqexid"] = username;
-        loginForm.Form["password"] = password;
-        request.Content = new FormUrlEncodedContent(loginForm.Form);
-        
-        var doc = new HtmlDocument();
-        var response = await httpClient.SendAsync(request);
-        doc.LoadHtml(await response.Content.ReadAsStringAsync());
+        _loginForm.Fields["sqexid"] = action.Username;
+        _loginForm.Fields["password"] = action.Password;
 
-        return doc.DocumentNode.SelectSingleNode("//x-sqexauth").GetAttributeValue("sid", "");
-    }
+        var response = await LoginResponse.FromHttpResponse(await web.SendFormAsync(_loginForm));
 
-    public string EncodeSessionId(string sid)
-    {
-        if (!IsValidHex(sid)) throw new ArgumentException("Input must be a 56-character hex string.");
-
-        string timeStr = (DateTimeOffset.UtcNow.ToUnixTimeSeconds() / 60).ToString();
-
-        string input = $"DQUEST10{sid}";
-        byte[] md5 = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes($"{timeStr}DraqonQuestX"));
-
-        byte[] output = new byte[64];
-        // Encoding loop
-        for (int i = 0; i < 64; i++)
+        if (response.ErrorMessage is not null)
         {
-            int ecx = md5[i % 16];
-            int eax = i < input.Length ? input[i] : 0;
-            ecx -= 48;
-            eax += ecx;
-            eax %= 78;
-            eax += 48;
-            output[i] = (byte)eax;
+            _loginForm = response.Form;
+            return new DisplayError(response.ErrorMessage, new AskUsernamePassword());
         }
+        
+        return new LoginCompleted();
 
-        return Encoding.UTF8.GetString(output, 0, 64);
+        // TODO: handle 2FA
     }
 
-    private bool IsValidHex(string str)
-    {
-        return System.Text.RegularExpressions.Regex.IsMatch(str, "^[0-9a-fA-F]{56}$");
-    }
 }
