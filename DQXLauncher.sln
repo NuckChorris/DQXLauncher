@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.Core", "DQXLaun
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.Core.Tests", "DQXLauncher.Core.Tests\DQXLauncher.Core.Tests.csproj", "{9BEFFA5D-1A6D-4D60-133C-0D2FA1D63D92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.WinUI", "DQXLauncher.WinUI\DQXLauncher.WinUI.csproj", "{EF15F8BB-2B23-2E6D-70CD-2F90FE1E6685}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.Windows", "DQXLauncher.Windows\DQXLauncher.Windows.csproj", "{EF15F8BB-2B23-2E6D-70CD-2F90FE1E6685}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.Toolbox", "DQXLauncher.Toolbox\DQXLauncher.Toolbox.csproj", "{93266E0B-6475-428A-89C7-15055BF67682}"
 EndProject
