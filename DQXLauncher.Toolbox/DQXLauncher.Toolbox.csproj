@@ -12,8 +12,13 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
-    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <PublishTrimmed>false</PublishTrimmed>
     <WindowsPackageType>None</WindowsPackageType>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <IncludeFrameworkReferencesInSingleFile>true</IncludeFrameworkReferencesInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -64,7 +69,10 @@
   <PropertyGroup>
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+    <!--
+    The PublishTrimmed property breaks shit for now
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+    -->
   </PropertyGroup>
 </Project>
