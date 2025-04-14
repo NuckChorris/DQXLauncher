@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="DQXLauncher.Views.RotationBanner"
+    x:Class="DQXLauncher.Windows.Views.RotationBanner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:hiroba="using:DQXLauncher.Core.Hiroba"
@@ -7,10 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <ThemeShadow x:Key="CardShadow"/>
+        <ThemeShadow x:Key="CardShadow" />
     </UserControl.Resources>
 
-    <Grid PointerEntered="Grid_PointerEntered" PointerExited="Grid_PointerExited" GotFocus="Grid_GotFocus" LostFocus="Grid_LostFocus">
+    <Grid PointerEntered="Grid_PointerEntered" PointerExited="Grid_PointerExited" GotFocus="Grid_GotFocus"
+          LostFocus="Grid_LostFocus">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -28,12 +29,13 @@
                 <Grid>
                     <ProgressRing Name="ProgressRing" Visibility="Visible" IsIndeterminate="True" IsActive="True" />
 
-                    <FlipView Name="FlipView" Margin="0" Visibility="Collapsed" Grid.Row="0" >
+                    <FlipView Name="FlipView" Margin="0" Visibility="Collapsed" Grid.Row="0">
                         <FlipView.ItemTemplate>
                             <DataTemplate x:DataType="hiroba:BannerImage">
-                                <HyperlinkButton Background="transparent" BorderThickness="0" Padding="0" NavigateUri="{x:Bind Href}">
+                                <HyperlinkButton Background="transparent" BorderThickness="0" Padding="0"
+                                                 NavigateUri="{x:Bind Href}">
                                     <Image Source="{x:Bind Src}" Stretch="UniformToFill"
-                                        AutomationProperties.Name="{x:Bind Alt}" />
+                                           AutomationProperties.Name="{x:Bind Alt}" />
                                 </HyperlinkButton>
                             </DataTemplate>
                         </FlipView.ItemTemplate>

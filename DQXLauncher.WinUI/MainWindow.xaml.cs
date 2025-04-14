@@ -1,18 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using Windows.Gaming.Input;
 using DQXLauncher.Core.Game.LoginStrategy;
+using DQXLauncher.Windows.Utils;
+using DQXLauncher.Windows.Views.Pages;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinUIEx;
-using DQXLauncher.Utils;
-using Windows.Gaming.Input;
-using System.Collections.Generic;
-using DQXLauncher.Views;
 
-namespace DQXLauncher
+namespace DQXLauncher.Windows
 {
-    public sealed partial class MainWindow : WinUIEx.WindowEx
+    public sealed partial class MainWindow : WindowEx
     {
         private List<Gamepad> _gamepads = new();
         public double TitleBarHeight => AppWindow.TitleBar.Height;
@@ -29,7 +29,7 @@ namespace DQXLauncher
             this.SetTitleBar(TitleBar);
             this.ExtendsContentIntoTitleBar = true;
             AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
-            AppFrame.Navigate(typeof(Views.Pages.HomePage));
+            AppFrame.Navigate(typeof(HomePage));
         }
 
         private void ResizeToFit()
@@ -55,7 +55,8 @@ namespace DQXLauncher
             if (!_gamepads.Contains(gamepad)) _gamepads.Add(gamepad);
         }
 
-        private void Gamepad_GamepadRemoved(object sender, Gamepad gamepad) {
+        private void Gamepad_GamepadRemoved(object sender, Gamepad gamepad)
+        {
             if (_gamepads.Contains(gamepad)) _gamepads.Remove(gamepad);
         }
 

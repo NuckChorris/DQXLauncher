@@ -1,6 +1,6 @@
 ﻿using DQXLauncher.Core.Game;
 
-namespace DQXLauncher;
+namespace DQXLauncher.Windows;
 
 public enum Theme
 {

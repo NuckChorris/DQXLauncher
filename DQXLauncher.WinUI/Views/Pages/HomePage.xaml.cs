@@ -5,9 +5,10 @@ using System.Text;
 using DQXLauncher.Core.Game;
 using DQXLauncher.Core.Game.LoginStrategy;
 using DQXLauncher.Core.Utils;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace DQXLauncher.Views.Pages
+namespace DQXLauncher.Windows.Views.Pages
 {
     public sealed partial class HomePage : Page
     {
@@ -16,7 +17,7 @@ namespace DQXLauncher.Views.Pages
             this.InitializeComponent();
         }
 
-        private async void Submit_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void Submit_Click(object sender, RoutedEventArgs e)
         {
             var login = new GuestLoginStrategy();
             //var auth = await login.Login(Username.Text, Password.Text);
@@ -28,16 +29,16 @@ namespace DQXLauncher.Views.Pages
             process.StartInfo.WorkingDirectory = Path.Combine(InstallInfo.Location, "game");
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.FileName = gamePath;
-            process.StartInfo.Arguments = $"-SessionID={sessionId} -StartupToken={startupToken} -PlayerNumber=0 -USE_APARTMENTTHREADED";
+            process.StartInfo.Arguments =
+                $"-SessionID={sessionId} -StartupToken={startupToken} -PlayerNumber=0 -USE_APARTMENTTHREADED";
             process.Start();
         }
 
-        private async void CRC_User(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void CRC_User(object sender, RoutedEventArgs e)
         {
             var user = Encoding.ASCII.GetBytes($"{Environment.UserName}\0");
             var crc = BitConverter.ToString(Crc32.Compute(user));
             Username.Text = $"{BitConverter.ToString(user)}={crc}";
         }
-
     }
 }

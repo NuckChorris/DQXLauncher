@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml;
 using WinRT.Interop;
 
-namespace DQXLauncher.Utils;
-
+namespace DQXLauncher.Windows.Utils;
 
 /// <summary>
 /// Nasty workaround for microsoft/microsoft-ui-xaml#9427
@@ -32,7 +32,7 @@ public static class NativeWindowHelper
 
         if (hwnd == IntPtr.Zero)
         {
-            System.Diagnostics.Debug.WriteLine("Invalid window handle. Cannot hook window procedure.");
+            Debug.WriteLine("Invalid window handle. Cannot hook window procedure.");
             return;
         }
 
@@ -40,7 +40,7 @@ public static class NativeWindowHelper
         IntPtr originalWndProc = GetWindowLongPtr(hwnd, GWLP_WNDPROC);
         if (originalWndProc == IntPtr.Zero)
         {
-            System.Diagnostics.Debug.WriteLine("Failed to retrieve the original WndProc.");
+            Debug.WriteLine("Failed to retrieve the original WndProc.");
             return;
         }
 
@@ -49,14 +49,14 @@ public static class NativeWindowHelper
             // Suppress double-click maximize
             if (msg == WM_NCLBUTTONDBLCLK)
             {
-                System.Diagnostics.Debug.WriteLine("Double-click maximize suppressed.");
+                Debug.WriteLine("Double-click maximize suppressed.");
                 return IntPtr.Zero;
             }
 
             // Suppress system maximize command (e.g., via keyboard shortcuts or title bar menu)
             if (msg == WM_SYSCOMMAND && wParam.ToInt32() == SC_MAXIMIZE)
             {
-                System.Diagnostics.Debug.WriteLine("Maximize via system command suppressed.");
+                Debug.WriteLine("Maximize via system command suppressed.");
                 return IntPtr.Zero;
             }
 
@@ -70,14 +70,14 @@ public static class NativeWindowHelper
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("Invalid parameters in WndProc call.");
+                    Debug.WriteLine("Invalid parameters in WndProc call.");
                     return IntPtr.Zero;
                 }
             }
             catch (Exception ex)
             {
                 // Handle exceptions to avoid crashing
-                System.Diagnostics.Debug.WriteLine($"Error in WndProc: {ex.Message}");
+                Debug.WriteLine($"Error in WndProc: {ex.Message}");
                 return IntPtr.Zero;
             }
         };
@@ -85,15 +85,16 @@ public static class NativeWindowHelper
         try
         {
             // Hook the new WndProc
-            IntPtr result = SetWindowLongPtr(hwnd, GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(_currentWndProcDelegate));
+            var result = SetWindowLongPtr(hwnd, GWLP_WNDPROC,
+                Marshal.GetFunctionPointerForDelegate(_currentWndProcDelegate));
             if (result == IntPtr.Zero)
             {
-                System.Diagnostics.Debug.WriteLine($"Failed to set new WndProc. Error: {Marshal.GetLastWin32Error()}");
+                Debug.WriteLine($"Failed to set new WndProc. Error: {Marshal.GetLastWin32Error()}");
             }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error hooking window procedure: {ex.Message}");
+            Debug.WriteLine($"Error hooking window procedure: {ex.Message}");
             return;
         }
 
@@ -103,7 +104,8 @@ public static class NativeWindowHelper
 
     // Win32 API declarations
     [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+    private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam,
+        IntPtr lParam);
 
     [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", SetLastError = true)]
     private static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
@@ -124,6 +126,8 @@ public static class NativeWindowHelper
 
     private static IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
     {
-        return IntPtr.Size == 8 ? SetWindowLongPtr64(hWnd, nIndex, dwNewLong) : SetWindowLong32(hWnd, nIndex, dwNewLong);
+        return IntPtr.Size == 8
+            ? SetWindowLongPtr64(hWnd, nIndex, dwNewLong)
+            : SetWindowLong32(hWnd, nIndex, dwNewLong);
     }
 }

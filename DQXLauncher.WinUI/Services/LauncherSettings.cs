@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
-using DQXLauncher.Core.Game;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DQXLauncher.Core.Game;
 
-namespace DQXLauncher.Services;
+namespace DQXLauncher.Windows.Services;
 
 public partial class LauncherSettings : ObservableObject
 {
@@ -18,7 +18,9 @@ public partial class LauncherSettings : ObservableObject
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "DQXLauncher", "launcherSettings.json");
 
-    private LauncherSettings() {}
+    private LauncherSettings()
+    {
+    }
 
     private static LauncherSettings GetDefaults()
     {
@@ -37,6 +39,7 @@ public partial class LauncherSettings : ObservableObject
             var json = File.ReadAllText(SettingsPath);
             return JsonSerializer.Deserialize<LauncherSettings>(json) ?? GetDefaults();
         }
+
         return GetDefaults();
     }
 
