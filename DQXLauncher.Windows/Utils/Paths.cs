@@ -10,4 +10,10 @@ public static class Paths
         , "DQXLauncher");
 
     public static string Cache => Path.Combine(AppData, "Cache");
+
+    public static void Create()
+    {
+        Directory.CreateDirectory(AppData);
+        Directory.CreateDirectory(Cache);
+    }
 }

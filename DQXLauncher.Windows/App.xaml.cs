@@ -20,6 +20,7 @@ namespace DQXLauncher.Windows
         /// </summary>
         public App()
         {
+            Paths.Create();
             CookieJar.JarPath = Paths.Cache;
             ConfigFile.RootDirectory = LauncherSettings.Instance.SaveFolderPath;
             this.InitializeComponent();
