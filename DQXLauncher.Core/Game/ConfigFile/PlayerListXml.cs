@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using System.Xml.XPath;
 using DQXLauncher.Core.StreamObfuscator;
 
@@ -9,7 +8,7 @@ public class PlayerListXml : ConfigFile
 {
     public abstract class Player(XElement element)
     {
-        protected XElement Element { get; } = element;
+        public XElement Element { get; } = element;
 
         protected InvalidConfigException Invalid()
         {
@@ -46,6 +45,11 @@ public class PlayerListXml : ConfigFile
             }
             set => Element.SetAttributeValue("Token", value);
         }
+
+        public void Remove()
+        {
+            Element.Remove();
+        }
     }
 
     // We don't yet support Easy Play accounts, so this is mostly just a placeholder for now.
@@ -54,6 +58,10 @@ public class PlayerListXml : ConfigFile
     // Launcher, and the Game also does not appear to be setting them. More research is needed.
     public class TrialPlayer(XElement element) : Player(element)
     {
+        public TrialPlayer() : this(new XElement("TrialInfo"))
+        {
+        }
+
         public string Id
         {
             get
@@ -86,36 +94,53 @@ public class PlayerListXml : ConfigFile
             }
             set => Element.SetAttributeValue("Code", value);
         }
-    }
 
+        public void Remove()
+        {
+            Element.Remove();
+        }
+    }
 
     protected override string DefaultContents => """
                                                  <?xml version="1.0" encoding="UTF-8"?>
                                                  <DragonQuestX>
-                                                     <PlayerListXml Version="0.9.0" LastSelect="0">
-                                                     </PlayerListXml>
+                                                     <PlayerList Version="0.9.0" LastSelect="0">
+                                                     </PlayerList>
                                                  </DragonQuestX>
                                                  """;
 
-    private XElement? PlayerListNode => Document?.XPathSelectElement("//DragonQuestX/PlayerListXml");
-    public ObservableCollection<Player> Players { get; private set; } = new();
+    private XElement PlayerListNode => Document?.XPathSelectElement("//DragonQuestX/PlayerList")!;
+    private XElement? TrialInfoNode => PlayerListNode.XPathSelectElement("//TrialInfo");
 
-    public void Add(Player player)
+    public Dictionary<string, SavedPlayer> Players { get; set; } = new();
+
+    public TrialPlayer? Trial
     {
-        if (PlayerListNode is null) throw Invalid();
-        PlayerListNode.Add(player);
-        Players.Add(player);
+        get => TrialInfoNode is null ? null : new TrialPlayer(TrialInfoNode);
+        set
+        {
+            TrialInfoNode?.Remove();
+            PlayerListNode.Add(value?.Element);
+        }
     }
 
-    public void Remove(Player player)
+    public void Add(SavedPlayer player)
     {
         if (PlayerListNode is null) throw Invalid();
-        Players.Remove(player);
+
+        Players.Add(player.Token, player);
+
+        if (TrialInfoNode is null)
+            PlayerListNode.Add(player.Element);
+        else
+            TrialInfoNode.AddBeforeSelf(player.Element);
     }
 
-    public IReadOnlyList<Player> GetPlayers()
+    public void Remove(SavedPlayer player)
     {
-        return Players.AsReadOnly();
+        if (PlayerListNode is null) throw Invalid();
+        Players.Remove(player.Token);
+        player.Remove();
     }
 
     private PlayerListXml() : base("dqxPlayerList.xml", 0x11, UsernameObfuscator.Factory)
@@ -123,32 +148,24 @@ public class PlayerListXml : ConfigFile
     }
 
     /// <summary>
-    /// Load, parse, and validate the PlayerListXml.xml file.
+    /// LoadAsync, parse, and validate the PlayerListXml.xml file.
     /// </summary>
     /// <exception cref="InvalidConfigException"></exception>
-    public override async Task Load()
+    public override async Task LoadAsync()
     {
-        await base.Load();
+        await base.LoadAsync();
         if (Document is null) throw Invalid();
         if (PlayerListNode is null) throw Invalid();
-
-        // Build list of players from XML.
-        foreach (var el in PlayerListNode.Elements())
-        {
-            Player player = el.Name.LocalName switch
-            {
-                "Player" => new SavedPlayer(el),
-                "TrialInfo" => new TrialPlayer(el),
-                _ => throw Invalid()
-            };
-            Players.Add(player);
-        }
+        Players = PlayerListNode
+            .XPathSelectElements("//Player")
+            .Select(el => new SavedPlayer(el))
+            .ToDictionary(p => p.Token);
     }
 
     public static async Task<PlayerListXml> OpenAsync()
     {
         var instance = new PlayerListXml();
-        await instance.Load();
+        await instance.LoadAsync();
         return instance;
     }
 }
