@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Net;
 using System.Text.Json;
 
@@ -15,6 +16,7 @@ public class CookieJar : DelegatingHandler
                 list = new List<Cookie>();
                 this[key] = list;
             }
+
             return list;
         }
     }
@@ -22,11 +24,13 @@ public class CookieJar : DelegatingHandler
     public static string? JarPath;
     private readonly string _jarFile;
     private Cookies _cookies = new Cookies();
-    
+
     private CookieJar(HttpMessageHandler innerHandler, string jarName) : base(innerHandler)
     {
-        if (JarPath is null) throw new InvalidOperationException("CookieJar.JarPath must be set before creating a CookieJar");
+        if (JarPath is null)
+            throw new InvalidOperationException("CookieJar.JarPath must be set before creating a CookieJar");
         _jarFile = Path.Combine(JarPath, $"{jarName}.cookies.json");
+        Directory.CreateDirectory(JarPath);
     }
 
     public static async Task<CookieJar> HandlerForJar(HttpMessageHandler innerHandler, string jarName)
@@ -46,25 +50,27 @@ public class CookieJar : DelegatingHandler
     {
         try
         {
-            await using FileStream stream = File.OpenRead(_jarFile);
+            await using var stream =
+                new FileStream(_jarFile, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
             _cookies = await JsonSerializer.DeserializeAsync<Cookies>(stream) ?? new Cookies();
         }
-        catch (FileNotFoundException e)
+        catch (Exception)
         {
             _cookies = new Cookies();
         }
     }
-    
+
     public async Task Clear()
     {
         _cookies.Clear();
         await Save();
     }
-    
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+        CancellationToken cancellationToken)
     {
         Debug.Assert(request.RequestUri != null, "request.RequestUri != null");
-        
+
         // Attach cookies for the current URI
         foreach (var cookie in GetCookiesForDomainAndPath(request.RequestUri.Host, request.RequestUri.AbsolutePath))
         {
@@ -87,12 +93,12 @@ public class CookieJar : DelegatingHandler
 
         return response;
     }
-    
+
     private void SetCookie(string header, string domain)
     {
         var cookie = ParseCookie(header, domain);
         var cookies = _cookies.GetOrCreate(domain);
-        
+
         // Remove any existing cookie with the same name
         cookies.RemoveAll(c => c.Name == cookie.Name);
         cookies.Add(cookie);
@@ -104,7 +110,7 @@ public class CookieJar : DelegatingHandler
         {
             return [];
         }
-        
+
         return cookies
             .Where(cookie => path.StartsWith(cookie.Path) && cookie.Expires > DateTime.UtcNow)
             .ToList();
@@ -122,24 +128,19 @@ public class CookieJar : DelegatingHandler
             .Skip(1)
             .Select(part => part.Trim())
             .Where(part => !string.IsNullOrEmpty(part)).Select(
-            part =>
-            {
-                var flagParts = part.Split('=', 2);
-                if (flagParts.Length == 2)
+                part =>
                 {
-                    return new KeyValuePair<string, object>(flagParts[0], flagParts[1]);
-                }
-                else
-                {
+                    var flagParts = part.Split('=', 2);
+                    if (flagParts.Length == 2) return new KeyValuePair<string, object>(flagParts[0], flagParts[1]);
+
                     return new KeyValuePair<string, object>(flagParts[0], true);
-                }
-            }).ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase);
-        
+                }).ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase);
+
         var expiry = ParseCookieExpiry(
             flags.TryGetValue("Max-Age", out var maxAgeObj) ? maxAgeObj as string : null,
             flags.TryGetValue("Expires", out var expiresObj) ? expiresObj as string : null
         );
-        
+
         var cookie = new Cookie()
         {
             Name = keyValue[0],
@@ -151,7 +152,7 @@ public class CookieJar : DelegatingHandler
         };
         // Manually apply the expiry because... yeah
         if (expiry is not null) cookie.Expires = expiry.Value;
-        
+
         return cookie;
     }
 
@@ -160,7 +161,8 @@ public class CookieJar : DelegatingHandler
         if (!String.IsNullOrEmpty(maxAge) && int.TryParse(maxAge, out var maxAgeSeconds))
         {
             return DateTime.UtcNow.AddSeconds(maxAgeSeconds);
-        } else if (!String.IsNullOrEmpty(expires))
+        }
+        else if (!string.IsNullOrEmpty(expires))
         {
             return ParseDate(expires);
         }
@@ -174,6 +176,7 @@ public class CookieJar : DelegatingHandler
         {
             return DateTime.MaxValue;
         }
-        return DateTime.ParseExact(time, "ddd, dd MMM yyyy HH:mm:ss 'GMT'", null, System.Globalization.DateTimeStyles.AssumeUniversal);
+
+        return DateTime.ParseExact(time, "ddd, dd MMM yyyy HH:mm:ss 'GMT'", null, DateTimeStyles.AssumeUniversal);
     }
 }
