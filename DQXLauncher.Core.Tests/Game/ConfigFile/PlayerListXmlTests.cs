@@ -1,25 +1,10 @@
 using DQXLauncher.Core.Game.ConfigFile;
+using DQXLauncher.TestUtilities;
 
 namespace DQXLauncher.Core.Tests.Game.ConfigFile;
 
 public class PlayerListXmlTests
 {
-    private class TempDirectory : IDisposable
-    {
-        public string Path { get; }
-
-        public TempDirectory()
-        {
-            Path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName());
-            Directory.CreateDirectory(Path);
-        }
-
-        public void Dispose()
-        {
-            Directory.Delete(Path, true);
-        }
-    }
-
     [Fact]
     public async Task Load_DefaultFile_CreatesDefaultStructure()
     {
