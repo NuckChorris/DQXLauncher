@@ -21,6 +21,7 @@ namespace DQXLauncher.Windows
 
         public MainWindow()
         {
+            this.SetIcon("Assets/icon.ico");
             this.InitializeComponent();
             this.SetIsResizable(false);
             this.SetIsMaximizable(false);

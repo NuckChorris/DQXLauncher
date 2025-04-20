@@ -1,11 +1,8 @@
 {
   "profiles": {
-    "DQXLauncher (Package)": {
-      "commandName": "MsixPackage",
+    "DQXLauncher.Windows": {
+      "commandName": "Project",
       "nativeDebugging": true
-    },
-    "DQXLauncher (Unpackaged)": {
-      "commandName": "Project"
     }
   }
 }
