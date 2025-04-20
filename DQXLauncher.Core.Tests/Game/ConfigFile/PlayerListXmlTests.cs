@@ -26,7 +26,7 @@ public class PlayerListXmlTests
         using var tempDir = new TempDirectory();
         Core.Game.ConfigFile.ConfigFile.RootDirectory = tempDir.Path;
 
-        var playerList = await PlayerListXml.OpenAsync();
+        var playerList = await PlayerListXml.LoadAsync();
 
         Assert.NotNull(playerList.Document);
         Assert.NotNull(playerList.Players);
@@ -39,17 +39,17 @@ public class PlayerListXmlTests
         using var tempDir = new TempDirectory();
         Core.Game.ConfigFile.ConfigFile.RootDirectory = tempDir.Path;
 
-        var playerList = await PlayerListXml.OpenAsync();
+        var playerList = await PlayerListXml.LoadAsync();
         playerList.Add(new PlayerListXml.SavedPlayer
         {
             Number = 1,
             Token = "test-token"
         });
-        await playerList.Save();
+        await playerList.SaveAsync();
 
-        await playerList.LoadAsync();
-        Assert.Single(playerList.Players);
-        var reloadedPlayer = Assert.IsType<PlayerListXml.SavedPlayer>(playerList.Players[0]);
+        var reloadedPlayerList = await PlayerListXml.LoadAsync();
+        Assert.Single(reloadedPlayerList.Players.Values);
+        var reloadedPlayer = Assert.IsType<PlayerListXml.SavedPlayer>(reloadedPlayerList.Players["test-token"]);
         Assert.Equal(1, reloadedPlayer.Number);
         Assert.Equal("test-token", reloadedPlayer.Token);
     }
@@ -60,17 +60,17 @@ public class PlayerListXmlTests
         using var tempDir = new TempDirectory();
         Core.Game.ConfigFile.ConfigFile.RootDirectory = tempDir.Path;
 
-        var playerList = await PlayerListXml.OpenAsync();
+        var playerList = await PlayerListXml.LoadAsync();
         playerList.Trial = new PlayerListXml.TrialPlayer
         {
             Id = "trial-id",
             Token = "trial-token",
             Code = "trial-code"
         };
-        await playerList.Save();
+        await playerList.SaveAsync();
 
-        await playerList.LoadAsync();
-        var reloadedTrialPlayer = Assert.IsType<PlayerListXml.TrialPlayer>(playerList.Trial);
+        var reloadedPlayerList = await PlayerListXml.LoadAsync();
+        var reloadedTrialPlayer = Assert.IsType<PlayerListXml.TrialPlayer>(reloadedPlayerList.Trial);
         Assert.Equal("trial-id", reloadedTrialPlayer.Id);
         Assert.Equal("trial-token", reloadedTrialPlayer.Token);
         Assert.Equal("trial-code", reloadedTrialPlayer.Code);
@@ -82,7 +82,7 @@ public class PlayerListXmlTests
         using var tempDir = new TempDirectory();
         Core.Game.ConfigFile.ConfigFile.RootDirectory = tempDir.Path;
 
-        var playerList = await PlayerListXml.OpenAsync();
+        var playerList = await PlayerListXml.LoadAsync();
         var expectedFilename = Path.Combine(tempDir.Path, "cxjYxsgheGzie!iyx");
         Assert.Equal(expectedFilename, playerList.Filename);
     }

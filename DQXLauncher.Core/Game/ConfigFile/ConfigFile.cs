@@ -29,7 +29,7 @@ public abstract class ConfigFile
         _obfuscatorFactory = obfuscatorFactory;
     }
 
-    public virtual async Task LoadAsync()
+    protected virtual async Task _LoadAsync()
     {
         await EnsureCreated();
 
@@ -39,7 +39,7 @@ public abstract class ConfigFile
         Document = await Task.Run(() => XDocument.Load(obfuscatorStream));
     }
 
-    public async Task Save()
+    public async Task SaveAsync()
     {
         await using var fileStream = new FileStream(Filename, FileMode.Truncate, FileAccess.Write, FileShare.Read);
         await using var obfuscatorStream = _obfuscatorFactory(fileStream);
