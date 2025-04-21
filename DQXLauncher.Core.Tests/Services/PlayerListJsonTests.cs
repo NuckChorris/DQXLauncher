@@ -50,6 +50,9 @@ public class PlayerListJsonTests
     [Fact]
     public async Task TestLoadName_UsesSavedPlayerLoginStrategy()
     {
+        using var tempDir = new TempDirectory();
+        Paths.AppData = tempDir.Path;
+
         // Arrange: Create a mock for SavedPlayerLoginStrategy.
         var mockLoginStrategy = new Mock<SavedPlayerLoginStrategy>();
         // Setup Step to return an AskPassword with Username "MockUser".
@@ -74,6 +77,9 @@ public class PlayerListJsonTests
     [Fact]
     public async Task TestSaveAsync_WhenPlayerNameIsNull_CallsLoadName()
     {
+        using var tempDir = new TempDirectory();
+        Paths.AppData = tempDir.Path;
+
         // Arrange: Create a mock for SavedPlayerLoginStrategy.
         var mockLoginStrategy = new Mock<SavedPlayerLoginStrategy>();
         mockLoginStrategy.Setup(s => s.Step(It.IsAny<string>()))
@@ -82,9 +88,6 @@ public class PlayerListJsonTests
         // Override the factory to return the mock.
         var originalFactory = PlayerListJson.SavedPlayerLoginStrategyFactory;
         PlayerListJson.SavedPlayerLoginStrategyFactory = () => mockLoginStrategy.Object;
-
-        using var tempDir = new TempDirectory();
-        Paths.AppData = tempDir.Path;
 
         var playerList = new PlayerListJson();
         playerList.Players.Add("dummy",
