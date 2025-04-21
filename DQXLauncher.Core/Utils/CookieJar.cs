@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Net;
 using System.Text.Json;
+using DQXLauncher.Core.Services;
 
 namespace DQXLauncher.Core.Utils;
 
@@ -21,7 +22,7 @@ public class CookieJar : DelegatingHandler
         }
     }
 
-    public static string? JarPath;
+    public static string JarPath => Paths.Cache;
     private readonly string _jarFile;
     private Cookies _cookies = new Cookies();
 
