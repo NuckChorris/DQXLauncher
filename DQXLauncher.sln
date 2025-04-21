@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.Windows", "DQXL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.Toolbox", "DQXLauncher.Toolbox\DQXLauncher.Toolbox.csproj", "{93266E0B-6475-428A-89C7-15055BF67682}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQXLauncher.TestUtilities", "DQXLauncher.TestUtilities\DQXLauncher.TestUtilities.csproj", "{B7A332E5-49A5-42C2-821C-2B131C05E8DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -81,6 +83,18 @@ Global
 		{93266E0B-6475-428A-89C7-15055BF67682}.Release|x86.ActiveCfg = Release|x86
 		{93266E0B-6475-428A-89C7-15055BF67682}.Release|x86.Build.0 = Release|x86
 		{93266E0B-6475-428A-89C7-15055BF67682}.Release|x86.Deploy.0 = Release|x86
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Debug|x64.Build.0 = Debug|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Debug|x86.Build.0 = Debug|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Release|ARM64.Build.0 = Release|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Release|x64.ActiveCfg = Release|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Release|x64.Build.0 = Release|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Release|x86.ActiveCfg = Release|Any CPU
+		{B7A332E5-49A5-42C2-821C-2B131C05E8DB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
