@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Immutable;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,9 +10,9 @@ namespace DQXLauncher.Core.Utils.WebClient;
 /// </summary>
 public class WebClient : HttpClient
 {
-    private static readonly ConcurrentDictionary<string, Task<WebClient>> Clients = new ConcurrentDictionary<string, Task<WebClient>>();
+    private static readonly ConcurrentDictionary<string, Task<WebClient>> Clients = new();
 
-    private WebClient(HttpMessageHandler handler) : base(handler)
+    public WebClient(HttpMessageHandler handler) : base(handler)
     {
         DefaultRequestHeaders.Add("Cache-Control", "max-age=0");
         DefaultRequestHeaders.Add("Connection", "Keep-Alive");
@@ -21,9 +20,10 @@ public class WebClient : HttpClient
         DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
         DefaultRequestHeaders.Add("Accept-Language", "en-US");
         // I wish I were making this up lmao
-        DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"User-Agent: SQEXAuthor/2.0.0(Windows 6.2; ja-jp; {MakeComputerId()})");
+        DefaultRequestHeaders.TryAddWithoutValidation("User-Agent",
+            $"User-Agent: SQEXAuthor/2.0.0(Windows 6.2; ja-jp; {MakeComputerId()})");
     }
-    
+
     /// <summary>
     /// Get an HttpClient configured to use a cookie jar with the given key. If one already exists for the given key, it
     /// will be returned.
@@ -34,7 +34,7 @@ public class WebClient : HttpClient
     {
         return await Clients.GetOrAdd(key, Build);
     }
-    
+
     private static async Task<WebClient> Build(string key = "default")
     {
         var handler = await CookieJar.HandlerForJar(new HttpClientHandler(), key);
@@ -47,7 +47,7 @@ public class WebClient : HttpClient
         request.Content = new FormUrlEncodedContent(form.Fields);
         return await SendAsync(request);
     }
-    
+
     /// <summary>
     /// Generate a computer ID to send to Square Enix to identify this computer.
     /// </summary>
@@ -67,7 +67,7 @@ public class WebClient : HttpClient
 
         Array.Copy(sha1.ComputeHash(Encoding.Unicode.GetBytes(hashString)), 0, bytes, 1, 4);
 
-        var checkSum = (byte) -(bytes[1] + bytes[2] + bytes[3] + bytes[4]);
+        var checkSum = (byte)-(bytes[1] + bytes[2] + bytes[3] + bytes[4]);
         bytes[0] = checkSum;
 
         return BitConverter.ToString(bytes).Replace("-", "").ToLower();
