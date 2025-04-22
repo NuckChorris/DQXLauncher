@@ -60,6 +60,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\"/>
     <Folder Include="Strings\en-US\" />
   </ItemGroup>
   <ItemGroup>
