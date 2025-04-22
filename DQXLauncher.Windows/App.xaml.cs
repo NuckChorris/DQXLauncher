@@ -1,7 +1,8 @@
-﻿using DQXLauncher.Core.Game.ConfigFile;
-using DQXLauncher.Core.Utils;
+﻿using System;
+using System.IO;
+using DQXLauncher.Core.Game.ConfigFile;
+using DQXLauncher.Core.Services;
 using DQXLauncher.Windows.Services;
-using DQXLauncher.Windows.Utils;
 using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -20,8 +21,10 @@ namespace DQXLauncher.Windows
         /// </summary>
         public App()
         {
+            Paths.AppData = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+                , "DQXLauncher");
             Paths.Create();
-            CookieJar.JarPath = Paths.Cache;
             ConfigFile.RootDirectory = LauncherSettings.Instance.SaveFolderPath;
             this.InitializeComponent();
         }
