@@ -1,26 +1,22 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.IO;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using DQXLauncher.Core.Game.ConfigFile;
 using DQXLauncher.Core.Services;
 using DQXLauncher.Windows.Services;
+using DQXLauncher.Windows.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Serilog;
 
 namespace DQXLauncher.Windows;
 
-/// <summary>
-///     Provides application-specific behavior to supplement the default Application class.
-/// </summary>
 public partial class App : Application
 {
     public static Window? AppWindow;
+    private readonly ServiceProvider Services;
 
-    /// <summary>
-    ///     Initializes the singleton application object.  This is the first line of authored code
-    ///     executed, and as such is the logical equivalent of main() or WinMain().
-    /// </summary>
     public App()
     {
         Paths.AppData = Path.Combine(
@@ -29,15 +25,32 @@ public partial class App : Application
         Paths.Create();
         ConfigFile.RootDirectory = LauncherSettings.Instance.SaveFolderPath;
         InitializeComponent();
+        Services = CreateServiceProvider();
+        Ioc.Default.ConfigureServices(Services);
     }
 
-    /// <summary>
-    ///     Invoked when the application is launched.
-    /// </summary>
-    /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        AppWindow = new MainWindow();
+        AppWindow = Services.GetService<MainWindow>();
+        Contract.Assert(AppWindow is not null);
         AppWindow.Activate();
+    }
+
+    private ServiceProvider CreateServiceProvider()
+    {
+        ServiceCollection services = new();
+        services.AddTransient<MainWindow>();
+        services.AddSingleton<MainFrameViewModel>();
+        services.AddLogging(lb => { lb.AddSerilog(BuildLogger(), true); });
+
+        return services.BuildServiceProvider();
+    }
+
+    private ILogger BuildLogger()
+    {
+        var cfg = new LoggerConfiguration();
+        cfg.Enrich.FromLogContext();
+
+        return cfg.CreateLogger();
     }
 }
