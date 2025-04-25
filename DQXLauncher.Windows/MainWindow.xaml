@@ -25,9 +25,10 @@
         </Grid.RowDefinitions>
 
         <views:TitleBar x:Name="TitleBar" Grid.Row="0"
+                        XYFocusDown="{x:Bind AppFrame}"
                         TitleBarHeight="{x:Bind TitleBarHeight}"
                         TitleBarRightInset="{x:Bind TitleBarRightInset}"
                         TitleBarLeftInset="{x:Bind TitleBarLeftInset}" />
-        <Frame x:Name="AppFrame" Grid.Row="1" />
+        <views:MainFrame x:Name="AppFrame" Grid.Row="1" />
     </Grid>
 </winex:WindowEx>

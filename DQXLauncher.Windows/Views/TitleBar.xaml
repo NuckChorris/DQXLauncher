@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
     <Grid Height="{x:Bind ActualTitleBarHeight}" ColumnSpacing="10" Margin="{x:Bind TitleBarMargins}">
         <Grid.ColumnDefinitions>
@@ -21,11 +23,10 @@
             <TextBlock Text="Alpha" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.6" Margin="10,0,0,0" />
         </StackPanel>
 
-        <Button Grid.Column="3"
-                Width="32" Height="32"
-                Padding="0"
-                Margin="0,0,0,0">
-            <FontIcon Glyph="&#xE713;" FontSize="16" />
-        </Button>
+        <controls:Segmented Grid.Column="2" HorizontalAlignment="Center"
+                            SelectedIndex="{x:Bind ViewModel.PageIndex, Mode=TwoWay}">
+            <controls:SegmentedItem Icon="{ui:SymbolIcon Symbol=Home}" />
+            <controls:SegmentedItem Icon="{ui:SymbolIcon Symbol=Setting}" />
+        </controls:Segmented>
     </Grid>
 </UserControl>
