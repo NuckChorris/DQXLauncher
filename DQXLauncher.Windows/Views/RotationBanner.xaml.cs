@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.System;
 using DQXLauncher.Core.Hiroba;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -58,6 +59,17 @@ public sealed partial class RotationBanner : UserControl
         if (FlipView.Items.Count > 0)
         {
             FlipView.SelectedIndex = (FlipView.SelectedIndex + 1) % FlipView.Items.Count;
+        }
+    }
+
+    private void FlipView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key == VirtualKey.Up || e.Key == VirtualKey.Down)
+        {
+            e.Handled = true;
+            var direction = e.Key == VirtualKey.Up ? FocusNavigationDirection.Up : FocusNavigationDirection.Down;
+            var searchRoot = (FrameworkElement)App.AppWindow.Content;
+            FocusManager.TryMoveFocus(direction, new FindNextElementOptions { SearchRoot = searchRoot });
         }
     }
 }

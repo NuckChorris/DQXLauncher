@@ -29,7 +29,8 @@
                 <Grid>
                     <ProgressRing Name="ProgressRing" Visibility="Visible" IsIndeterminate="True" IsActive="True" />
 
-                    <FlipView Name="FlipView" Margin="0" Visibility="Collapsed" Grid.Row="0">
+                    <FlipView Name="FlipView" Margin="0" Visibility="Collapsed" Grid.Row="0"
+                              PreviewKeyDown="FlipView_OnPreviewKeyDown">
                         <FlipView.ItemTemplate>
                             <DataTemplate x:DataType="hiroba:BannerImage">
                                 <HyperlinkButton Background="transparent" BorderThickness="0" Padding="0"
