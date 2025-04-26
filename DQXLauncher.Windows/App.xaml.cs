@@ -15,7 +15,7 @@ namespace DQXLauncher.Windows;
 public partial class App : Application
 {
     public static Window? AppWindow;
-    private readonly ServiceProvider Services;
+    private readonly ServiceProvider _services;
 
     public App()
     {
@@ -25,13 +25,14 @@ public partial class App : Application
         Paths.Create();
         ConfigFile.RootDirectory = LauncherSettings.Instance.SaveFolderPath;
         InitializeComponent();
-        Services = CreateServiceProvider();
-        Ioc.Default.ConfigureServices(Services);
+
+        _services = CreateServiceProvider();
+        Ioc.Default.ConfigureServices(_services);
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        AppWindow = Services.GetService<MainWindow>();
+        AppWindow = _services.GetService<MainWindow>();
         Contract.Assert(AppWindow is not null);
         AppWindow.Activate();
     }
@@ -41,6 +42,7 @@ public partial class App : Application
         ServiceCollection services = new();
         services.AddTransient<MainWindow>();
         services.AddSingleton<MainFrameViewModel>();
+        services.AddSingleton<LoginFrameViewModel>();
         services.AddLogging(lb => { lb.AddSerilog(BuildLogger(), true); });
 
         return services.BuildServiceProvider();
