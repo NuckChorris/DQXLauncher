@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using DQXLauncher.Core.Game.ConfigFile;
+using DQXLauncher.Core.Game.LoginStrategy;
 using DQXLauncher.Core.Services;
 
 namespace DQXLauncher.Core.Models;
@@ -99,6 +100,13 @@ public class SavedPlayer<TCredential>(
     {
         get => _credential.TotpKey;
         set => _credential.TotpKey = value;
+    }
+
+    public async Task<SavedPlayerLoginStrategy> GetLoginStrategy()
+    {
+        var strategy = new SavedPlayerLoginStrategy();
+        await strategy.Step(Token);
+        return strategy;
     }
 }
 
