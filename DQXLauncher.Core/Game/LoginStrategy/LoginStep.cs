@@ -10,6 +10,6 @@ public record AskOtp(string Username) : LoginStep;
 
 public record AskEasyPlay : LoginStep;
 
-public partial record DisplayError(string Message, LoginStep? Then) : LoginStep;
+public record DisplayError(string Message, LoginStep? Then) : LoginStep;
 
 public record LoginCompleted : LoginStep;

@@ -3,7 +3,7 @@ using DQXLauncher.Core.Utils.WebClient;
 
 namespace DQXLauncher.Core.Game.LoginStrategy;
 
-public class SavedPlayerLoginStrategy : LoginStrategy
+public class SavedPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<PasswordAction>
 {
     private WebForm? _loginForm;
     private Type? _expectedActionType;
