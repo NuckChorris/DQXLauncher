@@ -9,6 +9,7 @@
         <ResourceDictionary>
             <ThemeShadow x:Key="CardShadow" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
