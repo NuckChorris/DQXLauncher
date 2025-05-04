@@ -3,20 +3,20 @@ using DQXLauncher.Core.Utils.WebClient;
 
 namespace DQXLauncher.Core.Game.LoginStrategy;
 
-public class GuestLoginStrategy : LoginStrategy, ILoginStepHandler<UsernamePasswordAction>
+public class NewPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<UsernamePasswordAction>
 {
     private WebForm? _loginForm;
     private Type? _expectedActionType;
 
     public virtual async Task<LoginStep> Step()
     {
-        // Load the login form
+        Contract.Assert(_expectedActionType == null);
+
         _loginForm = await GetLoginForm(new Dictionary<string, string>
         {
-            { "dqxmode", "3" } // Guest mode
+            { "dqxmode", "1" }
         });
 
-        // TODO: Handle the case when the login form fails
 
         _expectedActionType = typeof(UsernamePasswordAction);
         return new AskUsernamePassword();
@@ -46,8 +46,6 @@ public class GuestLoginStrategy : LoginStrategy, ILoginStepHandler<UsernamePassw
             return new DisplayError("Login failed", new AskUsernamePassword(action.Username, action.Password));
         }
 
-        return new LoginCompleted(response.SessionId);
-
-        // TODO: handle 2FA
+        return new LoginCompleted(response.SessionId) { Token = response.Token };
     }
 }

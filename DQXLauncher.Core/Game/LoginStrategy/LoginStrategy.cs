@@ -20,7 +20,6 @@ public abstract class LoginStrategy
         throw new InvalidOperationException($"Strategy {GetType()} cannot handle {typeof(TAction)}");
     }
 
-
     protected async Task<WebForm> GetLoginForm(Dictionary<string, string> payload)
     {
         var httpClient = await GetWebClient();

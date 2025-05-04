@@ -38,9 +38,19 @@ public class SavedPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<Passwor
         if (response.ErrorMessage is not null)
         {
             _loginForm = response.Form;
-            return new DisplayError(response.ErrorMessage, new AskPassword(response.Form.Fields["sqexid"]));
+            return new DisplayError(response.ErrorMessage, new AskPassword(
+                response.Form.Fields["sqexid"],
+                action.Password));
         }
 
-        return new LoginCompleted();
+        if (response.SessionId is null)
+        {
+            _loginForm = response.Form;
+            return new DisplayError("Login failed", new AskPassword(
+                response.Form.Fields["sqexid"],
+                action.Password));
+        }
+
+        return new LoginCompleted(response.SessionId);
     }
 }
