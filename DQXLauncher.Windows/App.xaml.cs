@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.IO;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using DQXLauncher.Core.Game;
 using DQXLauncher.Core.Game.ConfigFile;
 using DQXLauncher.Core.Services;
 using DQXLauncher.Windows.Services;
@@ -14,26 +15,28 @@ namespace DQXLauncher.Windows;
 
 public partial class App : Application
 {
-    public static Window? AppWindow;
+    public static MainWindow AppWindow;
     private readonly ServiceProvider _services;
 
     public App()
     {
-        Paths.AppData = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
-            , "DQXLauncher");
-        Paths.Create();
-        ConfigFile.RootDirectory = LauncherSettings.Instance.SaveFolderPath;
         InitializeComponent();
 
         _services = CreateServiceProvider();
         Ioc.Default.ConfigureServices(_services);
+        
+        // Set up DQXLauncher.Core
+        Paths.AppData = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+            , "DQXLauncher");
+        Paths.Create();
+        var settings = _services.GetRequiredService<LauncherSettings>();
+        ConfigFile.RootDirectory = settings.SaveFolderPath;
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        AppWindow = _services.GetService<MainWindow>();
-        Contract.Assert(AppWindow is not null);
+        AppWindow = _services.GetRequiredService<MainWindow>();
         AppWindow.Activate();
     }
 
@@ -41,6 +44,7 @@ public partial class App : Application
     {
         ServiceCollection services = new();
         services.AddTransient<MainWindow>();
+        services.AddSingleton<LauncherSettings>(_ => LauncherSettings.Load());
         services.AddSingleton<MainFrameViewModel>();
         services.AddSingleton<LoginFrameViewModel>();
         services.AddLogging(lb => { lb.AddSerilog(BuildLogger(), true); });

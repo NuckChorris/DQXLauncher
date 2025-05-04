@@ -3,24 +3,16 @@ using System.IO;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DQXLauncher.Core.Game;
+using DQXLauncher.Core.Services;
 
 namespace DQXLauncher.Windows.Services;
 
 public partial class LauncherSettings : ObservableObject
 {
-    private static LauncherSettings? _instance;
-    public static LauncherSettings Instance => _instance ??= Load();
-
     [ObservableProperty] private string? _gameFolderPath;
     [ObservableProperty] private string? _saveFolderPath;
 
-    private static readonly string SettingsPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "DQXLauncher", "launcherSettings.json");
-
-    private LauncherSettings()
-    {
-    }
+    private static readonly string SettingsPath = Path.Combine(Paths.AppData, "LauncherSettings.json");
 
     private static LauncherSettings GetDefaults()
     {
