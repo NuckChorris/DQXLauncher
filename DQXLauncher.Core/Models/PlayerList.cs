@@ -21,6 +21,7 @@ public class SavedPlayer<TCredential>(
     TCredential credential)
     where TCredential : class, IPlayerCredential<TCredential>, new()
 {
+    private SavedPlayerLoginStrategy? _loginStrategy;
     private readonly TCredential _credential = credential;
     private readonly PlayerListXml.SavedPlayer _xml = xml;
     private readonly PlayerListJson.SavedPlayer _json = json;
@@ -104,9 +105,10 @@ public class SavedPlayer<TCredential>(
 
     public async Task<SavedPlayerLoginStrategy> GetLoginStrategy()
     {
-        var strategy = new SavedPlayerLoginStrategy();
-        await strategy.Step(Token);
-        return strategy;
+        if (_loginStrategy is not null) return _loginStrategy;
+        _loginStrategy = new SavedPlayerLoginStrategy();
+        await _loginStrategy.Step(Token);
+        return _loginStrategy;
     }
 }
 
