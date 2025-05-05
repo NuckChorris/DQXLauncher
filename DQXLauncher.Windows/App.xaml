@@ -7,6 +7,16 @@
     xmlns:converters="using:CommunityToolkit.WinUI.Converters">
     <Application.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="FailureColorBrush">#FFB10E1C</SolidColorBrush>
+                    <SolidColorBrush x:Key="SuccessColorBrush">#FF0E700E</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="FailureColorBrush">#FFDC626D</SolidColorBrush>
+                    <SolidColorBrush x:Key="SuccessColorBrush">#FF54B054</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
             <ThemeShadow x:Key="CardShadow" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
