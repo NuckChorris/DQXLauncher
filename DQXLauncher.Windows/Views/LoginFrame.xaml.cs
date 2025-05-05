@@ -16,28 +16,34 @@ public partial class LoginFrame : UserControl
     {
         InitializeComponent();
         ViewModel = Ioc.Default.GetRequiredService<LoginFrameViewModel>();
-        ViewModel.PropertyChanged += (_, e) =>
+        ViewModel.StepChanged += (_, change) =>
         {
-            if (e.PropertyName == nameof(ViewModel.Step)) DisplayStep(ViewModel.Step);
+            Frame.Navigate(PageForStep(change.Step), null, GetTransitionForDirection(change.Direction));
         };
     }
 
-    private void Navigate(Type pageType, object? parameter = null)
-    {
-        Frame.Navigate(pageType, parameter,
-            new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
-    }
-
-    private void DisplayStep(LoginStep step)
+    private Type? PageForStep(LoginStep step)
     {
         switch (step)
         {
-            case AskUsernamePassword:
-                Navigate(typeof(UsernamePasswordPage));
-                break;
-            case AskPassword:
-                Frame.Navigate(typeof(PasswordPage));
-                break;
+            case AskUsernamePassword: return typeof(UsernamePasswordPage);
+            case AskPassword: return typeof(PasswordPage);
+            case DisplayError: return typeof(DisplayErrorPage);
+            case LoginCompleted: return typeof(LoginCompletedPage);
+            default: return null;
+        }
+    }
+
+    private NavigationTransitionInfo? GetTransitionForDirection(LoginFrameViewModel.StepChangeDirection direction)
+    {
+        switch (direction)
+        {
+            case LoginFrameViewModel.StepChangeDirection.Backward:
+                return new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
+            case LoginFrameViewModel.StepChangeDirection.None:
+                return new SuppressNavigationTransitionInfo();
+            default:
+                return new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
         }
     }
 }
