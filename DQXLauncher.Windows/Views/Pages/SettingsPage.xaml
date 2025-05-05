@@ -5,15 +5,29 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Page.Resources>
+        <ResourceDictionary>
+            <!-- ReSharper disable Xaml.RedundantResource -->
+            <!-- These are used by the NavigationView below -->
+            <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+            <!-- ReSharper restore Xaml.RedundantResource -->
+        </ResourceDictionary>
+    </Page.Resources>
 
     <NavigationView x:Name="Navigation" IsBackButtonVisible="Collapsed" IsSettingsVisible="False"
-                    PaneDisplayMode="Left" IsPaneOpen="False">
+                    PaneDisplayMode="LeftCompact" IsPaneToggleButtonVisible="False"
+                    SelectionChanged="Navigation_OnSelectionChanged">
         <NavigationView.MenuItems>
-            <NavigationViewItem Icon="Save" Content="Launcher" Tag="SamplePage1" />
-            <NavigationViewItem Icon="Game" Content="Controls" Tag="SamplePage2" />
-            <NavigationViewItem Icon="Refresh" Content="Menu Item3" Tag="SamplePage3" />
-            <NavigationViewItem Icon="Download" Content="Menu Item4" Tag="SamplePage4" />
+            <NavigationViewItem Content="Launcher" Tag="Launcher" IsSelected="True">
+                <NavigationViewItem.Icon>
+                    <!-- This icon kinda looks like the launcher layout! How lucky! -->
+                    <FontIcon Glyph="&#xe8a1;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
         </NavigationView.MenuItems>
-        <Frame x:Name="SettingsFrame" />
+        <ScrollViewer x:Name="SettingsScrollViewer">
+            <Frame x:Name="SettingsFrame" Padding="4,0,24,24" />
+        </ScrollViewer>
     </NavigationView>
 </Page>

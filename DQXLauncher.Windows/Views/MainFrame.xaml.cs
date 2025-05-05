@@ -14,6 +14,7 @@ public partial class MainFrame : UserControl
         ViewModel.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(ViewModel.CurrentPage)) Frame.Navigate(ViewModel.Page);
+            if (e.PropertyName == nameof(ViewModel.WindowHeight)) App.AppWindow.Height = ViewModel.WindowHeight;
         };
     }
 
