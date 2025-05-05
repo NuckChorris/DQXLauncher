@@ -1,44 +1,38 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using DQXLauncher.Core.Game;
+﻿using System.Diagnostics;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using DQXLauncher.Core.Game.LoginStrategy;
-using DQXLauncher.Core.Utils;
-using Microsoft.UI.Xaml;
+using DQXLauncher.Windows.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 
-namespace DQXLauncher.Windows.Views.Pages
+namespace DQXLauncher.Windows.Views.Pages;
+
+public sealed partial class HomePage : Page
 {
-    public sealed partial class HomePage : Page
+    public LoginFrameViewModel ViewModel { get; set; }
+
+    public HomePage()
     {
-        public HomePage()
-        {
-            this.InitializeComponent();
-        }
+        InitializeComponent();
+        ViewModel = Ioc.Default.GetRequiredService<LoginFrameViewModel>();
+    }
 
-        private async void Submit_Click(object sender, RoutedEventArgs e)
+    private async void PlayerList_OnPlayerSelected(object? sender, PlayerListView.PlayerSelectedEventArgs e)
+    {
+        if (e.Item is SavedPlayerItem savedPlayer)
         {
-            var login = new GuestLoginStrategy();
-            //var auth = await login.Login(Username.Text, Password.Text);
-            //var sessionId = login.EncodeSessionId(auth);
-            var sessionId = "string";
-            var startupToken = StartupToken.GetStartupToken();
-            var gamePath = Path.Combine(InstallInfo.Location, "game", "DQXGame.exe");
-            Process process = new Process();
-            process.StartInfo.WorkingDirectory = Path.Combine(InstallInfo.Location, "game");
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.FileName = gamePath;
-            process.StartInfo.Arguments =
-                $"-SessionID={sessionId} -StartupToken={startupToken} -PlayerNumber=0 -USE_APARTMENTTHREADED";
-            process.Start();
+            var strategy = new SavedPlayerLoginStrategy();
+            ViewModel.IsLoading = true;
+            ViewModel.Start(strategy, await strategy.Step(savedPlayer.Player.Token));
+            ViewModel.IsLoading = false;
+            Debug.WriteLine("Stepping saved strategy");
         }
-
-        private async void CRC_User(object sender, RoutedEventArgs e)
+        else if (e.Item is NewPlayerItem)
         {
-            var user = Encoding.ASCII.GetBytes($"{Environment.UserName}\0");
-            var crc = BitConverter.ToString(Crc32.Compute(user));
-            Username.Text = $"{BitConverter.ToString(user)}={crc}";
+            var strategy = new NewPlayerLoginStrategy();
+            ViewModel.IsLoading = true;
+            ViewModel.Start(strategy, await strategy.Step());
+            ViewModel.IsLoading = false;
+            Debug.WriteLine("Stepping Guest strategy");
         }
     }
 }

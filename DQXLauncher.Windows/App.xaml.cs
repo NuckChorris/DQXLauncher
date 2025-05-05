@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.IO;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using DQXLauncher.Core.Game;
@@ -24,7 +23,7 @@ public partial class App : Application
 
         _services = CreateServiceProvider();
         Ioc.Default.ConfigureServices(_services);
-        
+
         // Set up DQXLauncher.Core
         Paths.AppData = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
@@ -45,6 +44,7 @@ public partial class App : Application
         ServiceCollection services = new();
         services.AddTransient<MainWindow>();
         services.AddSingleton<LauncherSettings>(_ => LauncherSettings.Load());
+        services.AddSingleton<Launcher, Win32Launcher>();
         services.AddSingleton<MainFrameViewModel>();
         services.AddSingleton<LoginFrameViewModel>();
         services.AddLogging(lb => { lb.AddSerilog(BuildLogger(), true); });

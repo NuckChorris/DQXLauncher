@@ -7,31 +7,19 @@
     xmlns:views="using:DQXLauncher.Windows.Views"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
-    <Page.Resources>
-        <ThemeShadow x:Key="CardShadow" />
-    </Page.Resources>
-
-    <Grid Margin="10,0, 10, 10" ColumnSpacing="10" RowSpacing="10">
+    <Grid Margin="10, 0, 10, 10" ColumnSpacing="10" RowSpacing="10" Height="auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="140" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <views:RotationBanner Grid.Row="0" Grid.ColumnSpan="2" />
-        <views:PlayerList Grid.Row="1" Grid.Column="0" />
-        <Border
-            Grid.Row="1"
-            Grid.Column="1"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-            CornerRadius="8"
-            BorderThickness="1"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-            Shadow="{StaticResource CardShadow}">
-            <views:LoginFrame x:Name="LoginFrame" Height="180" />
-        </Border>
+        <views:RotationBanner Grid.Row="0" Grid.ColumnSpan="2" XYFocusDown="{x:Bind PlayerList}" />
+        <views:PlayerListView Grid.Row="1" Grid.Column="0" x:Name="PlayerList"
+                              PlayerSelected="PlayerList_OnPlayerSelected" />
+        <views:LoginFrame Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" Height="auto" />
     </Grid>
 </Page>

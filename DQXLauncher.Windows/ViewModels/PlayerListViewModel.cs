@@ -54,10 +54,10 @@ public partial class PlayerListViewModel : ObservableObject
 {
     private PlayerList<PlayerCredential>? _playerList;
 
-    private PlayerList<PlayerCredential>? PlayerList
+    public PlayerList<PlayerCredential>? PlayerList
     {
         get => _playerList;
-        set => SetProperty(ref _playerList, value);
+        private set => SetProperty(ref _playerList, value);
     }
 
     public ObservableCollection<PlayerListItem> List { get; } = new();

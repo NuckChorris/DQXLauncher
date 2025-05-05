@@ -26,6 +26,6 @@ public sealed partial class PasswordPage : Page
     private async Task SubmitLogin()
     {
         var action = new PasswordAction(Password.Password);
-        ViewModel.Step = await ViewModel.Strategy.Step(action);
+        ViewModel.Forward(await ViewModel.Strategy.Step(action));
     }
 }
