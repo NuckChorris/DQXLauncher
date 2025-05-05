@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Windows.Gaming.Input;
 using DQXLauncher.Windows.Utils;
 using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml;
 using WinUIEx;
 
 namespace DQXLauncher.Windows
@@ -23,27 +21,9 @@ namespace DQXLauncher.Windows
             this.SetIsMaximizable(false);
             // Workaround for microsoft/microsoft-ui-xaml#9427
             NativeWindowHelper.ForceDisableMaximize(this);
-            this.SetTitleBar(TitleBar);
-            this.ExtendsContentIntoTitleBar = true;
+            SetTitleBar(TitleBar);
+            ExtendsContentIntoTitleBar = true;
             AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
-        }
-
-        private void ResizeToFit()
-        {
-            var scale = AppGrid.XamlRoot.RasterizationScale;
-
-            var width = (int)Math.Ceiling(AppGrid.DesiredSize.Width * scale);
-            var height = (int)Math.Ceiling(AppGrid.DesiredSize.Height * scale);
-
-            AppWindow.ResizeClient(new(width, height));
-        }
-
-        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (sender is FrameworkElement frame)
-            {
-                ResizeToFit();
-            }
         }
 
         private void Gamepad_GamepadAdded(object sender, Gamepad gamepad)

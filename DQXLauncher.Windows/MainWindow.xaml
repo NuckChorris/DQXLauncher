@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:DQXLauncher.Windows.Views"
     mc:Ignorable="d"
-    Height="400"
+    Height="370"
     Width="652"
     IsMaximizable="False"
     IsResizable="False"
@@ -18,7 +18,7 @@
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
-    <Grid x:Name="AppGrid" SizeChanged="Grid_SizeChanged">
+    <Grid x:Name="AppGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
