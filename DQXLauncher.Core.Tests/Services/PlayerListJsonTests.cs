@@ -56,7 +56,7 @@ public class PlayerListJsonTests
         // Arrange: Create a mock for SavedPlayerLoginStrategy.
         var mockLoginStrategy = new Mock<SavedPlayerLoginStrategy>();
         // Setup Step to return an AskPassword with Username "MockUser".
-        mockLoginStrategy.Setup(s => s.Step(It.IsAny<string>()))
+        mockLoginStrategy.Setup(s => s.Start(It.IsAny<string>()))
             .ReturnsAsync(new AskPassword("MockUser"));
 
         // Override the factory to return the mock.
@@ -82,7 +82,7 @@ public class PlayerListJsonTests
 
         // Arrange: Create a mock for SavedPlayerLoginStrategy.
         var mockLoginStrategy = new Mock<SavedPlayerLoginStrategy>();
-        mockLoginStrategy.Setup(s => s.Step(It.IsAny<string>()))
+        mockLoginStrategy.Setup(s => s.Start(It.IsAny<string>()))
             .ReturnsAsync(new AskPassword("MockUser"));
 
         // Override the factory to return the mock.
