@@ -10,8 +10,10 @@ internal interface ILoginStepHandler<in TAction> where TAction : LoginStepAction
 
 public abstract class LoginStrategy
 {
-    protected static readonly string LOGIN_URL =
+    private static readonly string LoginUrl =
         "https://dqx-login.square-enix.com/oauth/sp/sso/dqxwin/login?client_id=dqx_win&redirect_uri=https%3a%2f%2fdqx%2dlogin%2esquare%2denix%2ecom%2f&response_type=code";
+
+    public abstract Task<LoginStep> Restart();
 
     public virtual Task<LoginStep> Step<TAction>(TAction action) where TAction : LoginStepAction
     {
@@ -23,7 +25,7 @@ public abstract class LoginStrategy
     protected async Task<WebForm> GetLoginForm(Dictionary<string, string> payload)
     {
         var httpClient = await GetWebClient();
-        var request = new HttpRequestMessage(HttpMethod.Post, LOGIN_URL);
+        var request = new HttpRequestMessage(HttpMethod.Post, LoginUrl);
 
         request.Content = new FormUrlEncodedContent(payload);
 

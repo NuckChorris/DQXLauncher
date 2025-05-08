@@ -61,7 +61,7 @@ public class PlayerListJson
         public async Task LoadName()
         {
             var login = SavedPlayerLoginStrategyFactory();
-            var step = await login.Step(Token);
+            var step = await login.Start(Token);
 
             if (step is AskPassword action) Name = action.Username;
         }

@@ -8,18 +8,28 @@ public class NewPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<UsernameP
     private WebForm? _loginForm;
     private Type? _expectedActionType;
 
-    public virtual async Task<LoginStep> Step()
+    public virtual async Task<LoginStep> Start()
     {
-        Contract.Assert(_expectedActionType == null);
-
-        _loginForm = await GetLoginForm(new Dictionary<string, string>
+        try
         {
-            { "dqxmode", "1" }
-        });
-
+            _loginForm = await GetLoginForm(new Dictionary<string, string>
+            {
+                { "dqxmode", "1" }
+            });
+        }
+        catch (Exception)
+        {
+            // @TODO: Log the error
+            return new DisplayError("Failed to load login form", new RestartStrategy());
+        }
 
         _expectedActionType = typeof(UsernamePasswordAction);
         return new AskUsernamePassword();
+    }
+
+    public override async Task<LoginStep> Restart()
+    {
+        return await Start();
     }
 
     public virtual async Task<LoginStep> Step(UsernamePasswordAction action)

@@ -2,6 +2,8 @@
 
 public abstract record LoginStep;
 
+public record RestartStrategy : LoginStep;
+
 public record AskUsernamePassword(string? Username = null, string? Password = null) : LoginStep;
 
 public record AskPassword(string Username, string? Password = null) : LoginStep;

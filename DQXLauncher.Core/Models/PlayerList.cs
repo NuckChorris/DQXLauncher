@@ -107,7 +107,7 @@ public class SavedPlayer<TCredential>(
     {
         if (_loginStrategy is not null) return _loginStrategy;
         _loginStrategy = new SavedPlayerLoginStrategy();
-        await _loginStrategy.Step(Token);
+        await _loginStrategy.Start(Token);
         return _loginStrategy;
     }
 }

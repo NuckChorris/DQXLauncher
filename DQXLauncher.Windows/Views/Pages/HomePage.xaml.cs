@@ -22,7 +22,7 @@ public sealed partial class HomePage : Page
         {
             var strategy = new SavedPlayerLoginStrategy();
             ViewModel.IsLoading = true;
-            ViewModel.Start(strategy, await strategy.Step(savedPlayer.Player.Token));
+            ViewModel.Start(strategy, await strategy.Start(savedPlayer.Player.Token));
             ViewModel.IsLoading = false;
             Debug.WriteLine("Stepping saved strategy");
         }
@@ -30,7 +30,7 @@ public sealed partial class HomePage : Page
         {
             var strategy = new NewPlayerLoginStrategy();
             ViewModel.IsLoading = true;
-            ViewModel.Start(strategy, await strategy.Step());
+            ViewModel.Start(strategy, await strategy.Start());
             ViewModel.IsLoading = false;
             Debug.WriteLine("Stepping Guest strategy");
         }
