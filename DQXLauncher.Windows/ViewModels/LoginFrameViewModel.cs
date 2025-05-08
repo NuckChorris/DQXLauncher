@@ -24,20 +24,20 @@ public partial class LoginFrameViewModel : ObservableObject
         ChangeStep(step, StepChangeDirection.Backward);
     }
 
-    public void ChangeStep(LoginStep step, StepChangeDirection direction = StepChangeDirection.Forward)
+    private void ChangeStep(LoginStep step, StepChangeDirection direction = StepChangeDirection.Forward)
     {
         Step = step;
         var change = new StepChange { Step = step, Direction = direction };
         StepChanged?.Invoke(this, change);
     }
 
-    [ObservableProperty] private LoginStrategy _strategy;
+    [ObservableProperty] public partial LoginStrategy? Strategy { get; set; }
 
-    [ObservableProperty] private LoginStep _step;
+    [ObservableProperty] public partial LoginStep? Step { get; set; }
 
-    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] public partial bool IsLoading { get; set; } = false;
 
-    [ObservableProperty] private bool _saveCredentials;
+    [ObservableProperty] public partial bool SaveCredentials { get; set; } = false;
 
     public enum StepChangeDirection
     {
