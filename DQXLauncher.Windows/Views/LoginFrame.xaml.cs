@@ -34,7 +34,7 @@ public partial class LoginFrame : UserControl
         }
     }
 
-    private NavigationTransitionInfo? GetTransitionForDirection(LoginFrameViewModel.StepChangeDirection direction)
+    private NavigationTransitionInfo GetTransitionForDirection(LoginFrameViewModel.StepChangeDirection direction)
     {
         switch (direction)
         {

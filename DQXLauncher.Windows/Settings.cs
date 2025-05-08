@@ -1,4 +1,4 @@
-﻿using DQXLauncher.Core.Game;
+﻿using DQXLauncher.Windows.Services;
 
 namespace DQXLauncher.Windows;
 

@@ -18,7 +18,7 @@
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
-    <Grid x:Name="AppGrid">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />

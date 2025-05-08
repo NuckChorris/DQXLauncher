@@ -11,7 +11,7 @@ public partial class MainFrame : UserControl
         InitializeComponent();
         ViewModel = Ioc.Default.GetRequiredService<MainFrameViewModel>();
         Frame.Navigate(ViewModel.Page);
-        ViewModel.PropertyChanged += (s, e) =>
+        ViewModel.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(ViewModel.CurrentPage)) Frame.Navigate(ViewModel.Page);
             if (e.PropertyName == nameof(ViewModel.WindowHeight)) App.AppWindow.Height = ViewModel.WindowHeight;

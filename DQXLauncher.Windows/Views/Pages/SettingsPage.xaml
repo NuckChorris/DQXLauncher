@@ -15,7 +15,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <NavigationView x:Name="Navigation" IsBackButtonVisible="Collapsed" IsSettingsVisible="False"
+    <NavigationView IsBackButtonVisible="Collapsed" IsSettingsVisible="False"
                     PaneDisplayMode="LeftCompact" IsPaneToggleButtonVisible="False"
                     SelectionChanged="Navigation_OnSelectionChanged">
         <NavigationView.MenuItems>

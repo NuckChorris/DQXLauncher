@@ -27,7 +27,7 @@ public partial class LoginCompletedPage
         {
             if (ViewModel.Strategy is NewPlayerLoginStrategy)
             {
-                var player = PlayerListViewModel.PlayerList?.Add(step.Token!);
+                PlayerListViewModel.PlayerList?.Add(step.Token!);
                 await PlayerListViewModel.PlayerList?.SaveAsync();
             }
 

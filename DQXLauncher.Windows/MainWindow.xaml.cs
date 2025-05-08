@@ -26,12 +26,12 @@ namespace DQXLauncher.Windows
             AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
         }
 
-        private void Gamepad_GamepadAdded(object sender, Gamepad gamepad)
+        private void Gamepad_GamepadAdded(object _, Gamepad gamepad)
         {
             if (!_gamepads.Contains(gamepad)) _gamepads.Add(gamepad);
         }
 
-        private void Gamepad_GamepadRemoved(object sender, Gamepad gamepad)
+        private void Gamepad_GamepadRemoved(object _, Gamepad gamepad)
         {
             if (_gamepads.Contains(gamepad)) _gamepads.Remove(gamepad);
         }

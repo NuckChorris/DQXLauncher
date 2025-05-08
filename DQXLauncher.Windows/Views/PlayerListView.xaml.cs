@@ -1,4 +1,5 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using DQXLauncher.Windows.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 
@@ -7,7 +8,7 @@ namespace DQXLauncher.Windows.Views;
 public partial class PlayerListView
 {
     public event EventHandler<PlayerSelectedEventArgs>? PlayerSelected;
-    public PlayerListViewModel ViewModel { get; } = new();
+    public PlayerListViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<PlayerListViewModel>();
 
     public PlayerListView()
     {
