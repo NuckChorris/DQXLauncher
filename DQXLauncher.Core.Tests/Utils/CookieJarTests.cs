@@ -108,7 +108,6 @@ public class CookieJarTests
 
         var fakeHandler = new FakeHandler();
         var cookieJar = await CookieJar.HandlerForJar(fakeHandler, "TestJar_Clear");
-        var client = new HttpClient(cookieJar);
 
         // Add some cookies
         var cookie1 = new Cookie("Cookie1", "Value1", "/", "example.com")
