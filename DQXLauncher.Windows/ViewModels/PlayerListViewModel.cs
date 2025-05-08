@@ -62,6 +62,19 @@ public partial class PlayerListViewModel(PlayerList<PlayerCredential> playerList
         RebuildDisplayPlayers();
     }
 
+    public void AddPlayer(string token, string? name)
+    {
+        var player = PlayerList.Add(token);
+        if (name is not null) player.Name = name;
+
+        List.Add(new SavedPlayerItem { Player = player });
+    }
+
+    public async Task SaveAsync()
+    {
+        await PlayerList.SaveAsync();
+    }
+
     private void RebuildDisplayPlayers()
     {
         List.Clear();
