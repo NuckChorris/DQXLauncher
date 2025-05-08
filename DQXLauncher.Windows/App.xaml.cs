@@ -3,6 +3,7 @@ using System.IO;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using DQXLauncher.Core.Game;
 using DQXLauncher.Core.Game.ConfigFile;
+using DQXLauncher.Core.Models;
 using DQXLauncher.Core.Services;
 using DQXLauncher.Windows.Services;
 using DQXLauncher.Windows.ViewModels;
@@ -43,6 +44,8 @@ public partial class App : Application
     {
         ServiceCollection services = new();
         services.AddTransient<MainWindow>();
+        services.AddSingleton<PlayerList<PlayerCredential>>();
+        services.AddSingleton<PlayerListViewModel>();
         services.AddSingleton<LauncherSettings>(_ => LauncherSettings.Load());
         services.AddSingleton<Launcher, Win32Launcher>();
         services.AddSingleton<MainFrameViewModel>();

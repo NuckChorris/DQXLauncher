@@ -50,30 +50,21 @@ public class TrialPlayerItem : PlayerListItem
 }
 */
 
-public partial class PlayerListViewModel : ObservableObject
+public partial class PlayerListViewModel(PlayerList<PlayerCredential> playerList) : ObservableObject
 {
-    private PlayerList<PlayerCredential>? _playerList;
-
-    public PlayerList<PlayerCredential>? PlayerList
-    {
-        get => _playerList;
-        private set => SetProperty(ref _playerList, value);
-    }
-
+    private PlayerList<PlayerCredential> PlayerList { get; } = playerList;
     public ObservableCollection<PlayerListItem> List { get; } = new();
 
     [RelayCommand]
     public async Task LoadAsync()
     {
-        PlayerList = await PlayerList<PlayerCredential>.LoadAsync();
+        await PlayerList.LoadAsync();
         RebuildDisplayPlayers();
     }
 
     private void RebuildDisplayPlayers()
     {
         List.Clear();
-
-        if (PlayerList is null) return;
 
         foreach (var savedPlayer in PlayerList.Players) List.Add(new SavedPlayerItem { Player = savedPlayer });
 

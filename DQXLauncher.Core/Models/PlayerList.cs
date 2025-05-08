@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using DQXLauncher.Core.Game.ConfigFile;
 using DQXLauncher.Core.Game.LoginStrategy;
@@ -146,7 +145,7 @@ public class TrialPlayer
 ///     properties such as the username, password, OTP key, etc. As such, we store this data in our own
 ///     <see cref="PlayerListJson">PlayerList.json</see> and an OS-specific implementation of
 ///     <see cref="IPlayerCredential{TSelf}" /> which is used to store the password and TOTP key securely. This class
-///     coordinates the three, when you save it you save all three. When loading, the XML file is used as the source of
+///     coordinates the three; when you save it, you save all three. When loading, the XML file is used as the source of
 ///     truth, and the JSON and PlayerCredential are updated to match. This means removing a player from the XML (using the
 ///     official launcher) will also remove it from the JSON on next startup.
 /// </remarks>
@@ -165,7 +164,7 @@ public class PlayerList<TCredential> where TCredential : class, IPlayerCredentia
     private PlayerListJson? _json;
     private ImmutableList<TCredential>? _credentials;
 
-    public ObservableCollection<SavedPlayer<TCredential>> Players { get; private set; }
+    public List<SavedPlayer<TCredential>> Players { get; private set; } = new();
 
     /// <summary>
     ///     Add a new player to the list by their token. This will add the player to the XML, JSON, and credential store but
@@ -234,25 +233,26 @@ public class PlayerList<TCredential> where TCredential : class, IPlayerCredentia
     }
 
     /// <summary>
-    ///     Load the PlayerList from disk. This will load the XML, JSON, and credential store, sync it all to the XML, and
-    ///     provide the PlayerList in response.
+    ///     Load the PlayerList from disk. This will load the XML, JSON, and credential store, then sync it all to match the XML.
     /// </summary>
-    /// <returns>The loaded PlayerList instance</returns>
-    public static async Task<PlayerList<TCredential>> LoadAsync()
+    public async Task LoadAsync()
     {
-        var instance = new PlayerList<TCredential>();
-        await instance._LoadAsync();
-        await instance.SyncFromXml();
-        instance.Players = new ObservableCollection<SavedPlayer<TCredential>>(
-            instance._json!.Players.Values.Select(jsonPlayer =>
+        _xml = await PlayerListXml.LoadAsync();
+        _json = await PlayerListJson.LoadAsync();
+        _credentials = TCredential.GetAll();
+
+        // Sync the XML to the JSON and credential store
+        await SyncFromXml();
+        Players = new List<SavedPlayer<TCredential>>(
+            _json!.Players.Values.Select(jsonPlayer =>
             {
-                var xmlPlayer = instance._xml!.Players[jsonPlayer.Token];
+                var xmlPlayer = _xml!.Players[jsonPlayer.Token];
                 var credential = TCredential.Load(jsonPlayer.Token);
 
                 return new SavedPlayer<TCredential>(jsonPlayer, xmlPlayer, credential);
             }));
-        await instance.SaveAsync();
-        return instance;
+
+        await SaveAsync();
     }
 
     private int GetAvailableNumber()
@@ -265,13 +265,6 @@ public class PlayerList<TCredential> where TCredential : class, IPlayerCredentia
                 numberSet.Remove((int)player.Number);
 
         return numberSet.First();
-    }
-
-    private async Task _LoadAsync()
-    {
-        _xml = await PlayerListXml.LoadAsync();
-        _json = await PlayerListJson.LoadAsync();
-        _credentials = TCredential.GetAll();
     }
 
     private async Task SyncFromXml()
