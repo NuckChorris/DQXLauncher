@@ -12,6 +12,10 @@ public partial class LoginCompletedPage
     public LoginFrameViewModel ViewModel { get; set; }
     public PlayerListViewModel PlayerListViewModel { get; set; }
     public Launcher Launcher { get; set; }
+    private LoginStrategy Strategy => ViewModel.Strategy ?? throw new InvalidOperationException("Invalid strategy");
+
+    private LoginCompleted Step =>
+        ViewModel.Step is LoginCompleted step ? step : throw new InvalidOperationException("Invalid step");
 
     public LoginCompletedPage()
     {
@@ -23,20 +27,13 @@ public partial class LoginCompletedPage
 
     private async void LoginCompletedPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.Step is LoginCompleted step)
+        if (Strategy is NewPlayerLoginStrategy strategy && Step.Token is not null)
         {
-            if (ViewModel.Strategy is NewPlayerLoginStrategy)
-            {
-                PlayerListViewModel.PlayerList?.Add(step.Token!);
-                await PlayerListViewModel.PlayerList?.SaveAsync();
-            }
+            PlayerListViewModel.AddPlayer(Step.Token, strategy.Username);
+            await PlayerListViewModel.SaveAsync();
+        }
 
-            Launcher.SessionId = step.SessionId;
-            await Launcher.LaunchGame();
-        }
-        else
-        {
-            throw new InvalidOperationException("Invalid step");
-        }
+        Launcher.SessionId = Step.SessionId;
+        await Launcher.LaunchGame();
     }
 }

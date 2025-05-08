@@ -11,21 +11,23 @@ namespace DQXLauncher.Windows.Views.LoginPages;
 public sealed partial class PasswordPage : Page
 {
     public LoginFrameViewModel ViewModel { get; set; }
+    private LoginStrategy Strategy => ViewModel.Strategy ?? throw new InvalidOperationException("Invalid strategy");
+
+    private AskPassword Step =>
+        ViewModel.Step is AskPassword step ? step : throw new InvalidOperationException("Invalid step");
 
     public PasswordPage()
     {
         InitializeComponent();
         ViewModel = Ioc.Default.GetRequiredService<LoginFrameViewModel>();
-        if (ViewModel.Step is AskPassword step)
-            Username.Text = step.Username;
-        else
-            throw new InvalidOperationException("Invalid step");
+        Username.Text = Step.Username;
+        Password.Password = Step.Password;
     }
 
     [RelayCommand]
     private async Task SubmitLogin()
     {
         var action = new PasswordAction(Password.Password);
-        ViewModel.Forward(await ViewModel.Strategy.Step(action));
+        ViewModel.Forward(await Strategy.Step(action));
     }
 }

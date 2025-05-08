@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using DQXLauncher.Core.Game.LoginStrategy;
 using DQXLauncher.Windows.ViewModels;
@@ -9,16 +9,11 @@ namespace DQXLauncher.Windows.Views.LoginPages;
 public partial class DisplayErrorPage
 {
     public LoginFrameViewModel ViewModel { get; set; }
+    private LoginStrategy Strategy => ViewModel.Strategy ?? throw new InvalidOperationException("Invalid strategy");
 
-    public DisplayError Step
-    {
-        get
-        {
-            Contract.Assert(ViewModel.Step is not null);
-            Contract.Assert(ViewModel.Step is DisplayError);
-            return (DisplayError)ViewModel.Step;
-        }
-    }
+    private DisplayError Step =>
+        ViewModel.Step is DisplayError step ? step : throw new InvalidOperationException("Invalid step");
+
 
     public DisplayErrorPage()
     {

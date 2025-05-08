@@ -7,6 +7,7 @@ public class NewPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<UsernameP
 {
     private WebForm? _loginForm;
     private Type? _expectedActionType;
+    public string? Username { get; private set; }
 
     public virtual async Task<LoginStep> Start()
     {
@@ -39,6 +40,7 @@ public class NewPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<UsernameP
 
         var web = await GetWebClient();
 
+        Username = action.Username;
         _loginForm.Fields["sqexid"] = action.Username;
         _loginForm.Fields["password"] = action.Password;
 
