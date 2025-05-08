@@ -1,12 +1,15 @@
-﻿using Microsoft.Win32;
+﻿using System.Collections.Generic;
+using System.IO;
+using Microsoft.Win32;
 
-namespace DQXLauncher.Core.Game;
+namespace DQXLauncher.Windows.Services;
 
 public static class InstallInfo
 {
     private static readonly string RegistryPrefix =
         "HKEY_LOCAL_MACHINE\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\";
-    private static readonly Dictionary<string, string> ExpacIds = new Dictionary<string, string>
+
+    private static readonly Dictionary<string, string> ExpacIds = new()
     {
         { "1.0", "{300DCC8E-BE61-4FB5-B9D8-FDA19E3AAA38}" },
         { "2.0", "{4FD779A0-9CAE-4A36-A33E-EB01DA36537E}" },
@@ -20,40 +23,34 @@ public static class InstallInfo
     private static string? GetLocation()
     {
         string? gameExe = null;
-        foreach (KeyValuePair<string, string> kv in ExpacIds) {
+        foreach (var kv in ExpacIds)
             if (Registry.GetValue($"{RegistryPrefix}{kv.Value}", "DisplayIcon", null) is string iconFile)
             {
-                gameExe = iconFile[0..iconFile.LastIndexOf(',')];
+                gameExe = iconFile[..iconFile.LastIndexOf(',')];
                 break;
             }
-        }
-        
-        if (Path.GetDirectoryName(gameExe) is { } gameDir)
-        {
-            return Directory.GetParent(gameDir)?.FullName;
-        }
+
+        if (Path.GetDirectoryName(gameExe) is { } gameDir) return Directory.GetParent(gameDir)?.FullName;
 
         return null;
     }
 
     private static bool IsInstalled(string version)
     {
-        if (Registry.GetValue($"{RegistryPrefix}{ExpacIds[version]}", "DisplayIcon", null) is string)
-        {
-            return true;
-        }
+        if (Registry.GetValue($"{RegistryPrefix}{ExpacIds[version]}", "DisplayIcon", null) is string) return true;
 
         return false;
     }
-    
+
     /// <summary>
-    /// The installation root of the game, parent directory of Boot and Game directories.
+    ///     The installation root of the game, parent directory of Boot and Game directories.
     /// </summary>
     /// <remarks>
-    /// This checks the registry for each expansion, and returns the installation location of the first expansion that
-    /// is installed. If no expansions are found, this will return null.
+    ///     This checks the registry for each expansion, and returns the installation location of the first expansion that
+    ///     is installed. If no expansions are found, this will return null.
     /// </remarks>
     public static string? Location => GetLocation();
+
     public static bool HasVer1 => IsInstalled("1.0");
     public static bool HasVer2 => IsInstalled("2.0");
     public static bool HasVer3 => IsInstalled("3.0");

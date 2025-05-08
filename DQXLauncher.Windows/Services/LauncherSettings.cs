@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DQXLauncher.Core.Game;
 using DQXLauncher.Core.Services;
 
 namespace DQXLauncher.Windows.Services;
