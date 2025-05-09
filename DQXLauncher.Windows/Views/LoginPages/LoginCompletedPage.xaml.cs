@@ -27,10 +27,15 @@ public partial class LoginCompletedPage
 
     private async void LoginCompletedPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (Strategy is NewPlayerLoginStrategy strategy && Step.Token is not null)
+        if (Strategy is NewPlayerLoginStrategy newStrategy && Step.Token is not null)
         {
-            PlayerListViewModel.AddPlayer(Step.Token, strategy.Username);
+            PlayerListViewModel.AddPlayer(Step.Token, newStrategy.Username);
             await PlayerListViewModel.SaveAsync();
+        }
+
+        if (Strategy is SavedPlayerLoginStrategy savedStrategy)
+        {
+            Launcher.PlayerNumber = savedStrategy.PlayerNumber;
         }
 
         Launcher.SessionId = Step.SessionId;
