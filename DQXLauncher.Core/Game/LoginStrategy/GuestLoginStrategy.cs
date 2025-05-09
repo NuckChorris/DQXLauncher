@@ -8,7 +8,7 @@ public class GuestLoginStrategy : LoginStrategy, ILoginStepHandler<UsernamePassw
     private WebForm? _loginForm;
     private Type? _expectedActionType;
 
-    public virtual async Task<LoginStep> Start()
+    public override async Task<LoginStep> Start()
     {
         // Load the login form
         try
@@ -26,11 +26,6 @@ public class GuestLoginStrategy : LoginStrategy, ILoginStepHandler<UsernamePassw
 
         _expectedActionType = typeof(UsernamePasswordAction);
         return new AskUsernamePassword();
-    }
-
-    public override async Task<LoginStep> Restart()
-    {
-        return await Start();
     }
 
     public virtual async Task<LoginStep> Step(UsernamePasswordAction action)

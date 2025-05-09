@@ -3,22 +3,21 @@ using DQXLauncher.Core.Utils.WebClient;
 
 namespace DQXLauncher.Core.Game.LoginStrategy;
 
-public class SavedPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<PasswordAction>
+public class SavedPlayerLoginStrategy(string token, int number) : LoginStrategy, ILoginStepHandler<PasswordAction>
 {
     private WebForm? _loginForm;
     private Type? _expectedActionType;
-    private string? _token;
+    private readonly string _token = token;
+    public int PlayerNumber { get; set; } = number;
 
-    public virtual async Task<LoginStep> Start(string token)
+    public override async Task<LoginStep> Start()
     {
-        _token = token;
-
         try
         {
             _loginForm = await GetLoginForm(new Dictionary<string, string>
             {
                 { "dqxmode", "2" },
-                { "id", token }
+                { "id", _token }
             });
         }
         catch (Exception)
@@ -30,14 +29,7 @@ public class SavedPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<Passwor
         var username = _loginForm.Fields["sqexid"];
 
         _expectedActionType = typeof(PasswordAction);
-        return new AskPassword(username);
-    }
-
-    public override async Task<LoginStep> Restart()
-    {
-        if (_token is null) throw new InvalidOperationException("Token is null");
-
-        return await Start(_token);
+        return new AskPassword(username, credential?.Password);
     }
 
     public virtual async Task<LoginStep> Step(PasswordAction action)

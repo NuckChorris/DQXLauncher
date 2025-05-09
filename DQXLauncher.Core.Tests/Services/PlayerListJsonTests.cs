@@ -56,12 +56,12 @@ public class PlayerListJsonTests
         // Arrange: Create a mock for SavedPlayerLoginStrategy.
         var mockLoginStrategy = new Mock<SavedPlayerLoginStrategy>();
         // Setup Step to return an AskPassword with Username "MockUser".
-        mockLoginStrategy.Setup(s => s.Start(It.IsAny<string>()))
+        mockLoginStrategy.Setup(s => s.Start())
             .ReturnsAsync(new AskPassword("MockUser"));
 
         // Override the factory to return the mock.
         var originalFactory = PlayerListJson.SavedPlayerLoginStrategyFactory;
-        PlayerListJson.SavedPlayerLoginStrategyFactory = () => mockLoginStrategy.Object;
+        PlayerListJson.SavedPlayerLoginStrategyFactory = (_, _) => mockLoginStrategy.Object;
 
         var savedPlayer = new PlayerListJson.SavedPlayer { Number = 1, Token = "anyToken", Name = null };
 
@@ -82,12 +82,12 @@ public class PlayerListJsonTests
 
         // Arrange: Create a mock for SavedPlayerLoginStrategy.
         var mockLoginStrategy = new Mock<SavedPlayerLoginStrategy>();
-        mockLoginStrategy.Setup(s => s.Start(It.IsAny<string>()))
+        mockLoginStrategy.Setup(s => s.Start())
             .ReturnsAsync(new AskPassword("MockUser"));
 
         // Override the factory to return the mock.
         var originalFactory = PlayerListJson.SavedPlayerLoginStrategyFactory;
-        PlayerListJson.SavedPlayerLoginStrategyFactory = () => mockLoginStrategy.Object;
+        PlayerListJson.SavedPlayerLoginStrategyFactory = (_, _) => mockLoginStrategy.Object;
 
         var playerList = new PlayerListJson();
         playerList.Players.Add("dummy",

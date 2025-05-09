@@ -8,7 +8,7 @@ public record AskUsernamePassword(string? Username = null, string? Password = nu
 
 public record AskPassword(string Username, string? Password = null) : LoginStep;
 
-public record AskOtp(string Username) : LoginStep;
+public record AskOtp(string Username, string? Otp = null) : LoginStep;
 
 public record AskEasyPlay : LoginStep;
 

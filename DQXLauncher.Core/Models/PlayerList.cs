@@ -21,6 +21,10 @@ public class SavedPlayer<TCredential>(
     where TCredential : class, IPlayerCredential<TCredential>, new()
 {
     private SavedPlayerLoginStrategy? _loginStrategy;
+
+    public SavedPlayerLoginStrategy LoginStrategy =>
+        _loginStrategy ??= new SavedPlayerLoginStrategy(Token, Number - 1, _credential);
+
     private readonly TCredential _credential = credential;
     private readonly PlayerListXml.SavedPlayer _xml = xml;
     private readonly PlayerListJson.SavedPlayer _json = json;
@@ -43,14 +47,13 @@ public class SavedPlayer<TCredential>(
     ///     seems to be one-indexed, and does not align with the folder used for the save file, which is zero-indexed.
     ///     Honestly, it might be entirely for displaying "Player 1"?
     /// </remarks>
-    public int? Number
+    public int Number
     {
         get => _json.Number;
         set
         {
-            if (value is null) return;
-            _xml.Number = (int)value;
-            _json.Number = (int)value;
+            _xml.Number = value;
+            _json.Number = value;
         }
     }
 
@@ -100,14 +103,6 @@ public class SavedPlayer<TCredential>(
     {
         get => _credential.TotpKey;
         set => _credential.TotpKey = value;
-    }
-
-    public async Task<SavedPlayerLoginStrategy> GetLoginStrategy()
-    {
-        if (_loginStrategy is not null) return _loginStrategy;
-        _loginStrategy = new SavedPlayerLoginStrategy();
-        await _loginStrategy.Start(Token);
-        return _loginStrategy;
     }
 }
 
@@ -261,8 +256,7 @@ public class PlayerList<TCredential> where TCredential : class, IPlayerCredentia
 
         var numberSet = new SortedSet<int> { 1, 2, 3, 4 };
         foreach (var player in Players)
-            if (player.Number is not null)
-                numberSet.Remove((int)player.Number);
+            numberSet.Remove(player.Number);
 
         return numberSet.First();
     }

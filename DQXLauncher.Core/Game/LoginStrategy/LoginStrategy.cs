@@ -13,7 +13,7 @@ public abstract class LoginStrategy
     private static readonly string LoginUrl =
         "https://dqx-login.square-enix.com/oauth/sp/sso/dqxwin/login?client_id=dqx_win&redirect_uri=https%3a%2f%2fdqx%2dlogin%2esquare%2denix%2ecom%2f&response_type=code";
 
-    public abstract Task<LoginStep> Restart();
+    public abstract Task<LoginStep> Start();
 
     public virtual Task<LoginStep> Step<TAction>(TAction action) where TAction : LoginStepAction
     {

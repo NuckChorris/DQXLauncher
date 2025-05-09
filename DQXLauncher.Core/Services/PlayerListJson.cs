@@ -45,8 +45,8 @@ public class PlayerListJson
     }
 
     // Added factory to allow injecting a custom SavedPlayerLoginStrategy instance.
-    public static Func<SavedPlayerLoginStrategy> SavedPlayerLoginStrategyFactory { get; set; } =
-        () => new SavedPlayerLoginStrategy();
+    public static Func<string, int, SavedPlayerLoginStrategy> SavedPlayerLoginStrategyFactory { get; set; } =
+        (token, number) => new SavedPlayerLoginStrategy(token, number);
 
     public class SavedPlayer
     {
@@ -60,8 +60,8 @@ public class PlayerListJson
         /// </summary>
         public async Task LoadName()
         {
-            var login = SavedPlayerLoginStrategyFactory();
-            var step = await login.Start(Token);
+            var login = SavedPlayerLoginStrategyFactory(Token, Number - 1);
+            var step = await login.Start();
 
             if (step is AskPassword action) Name = action.Username;
         }

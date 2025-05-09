@@ -9,7 +9,7 @@ public class NewPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<UsernameP
     private Type? _expectedActionType;
     public string? Username { get; private set; }
 
-    public virtual async Task<LoginStep> Start()
+    public override async Task<LoginStep> Start()
     {
         try
         {
@@ -26,11 +26,6 @@ public class NewPlayerLoginStrategy : LoginStrategy, ILoginStepHandler<UsernameP
 
         _expectedActionType = typeof(UsernamePasswordAction);
         return new AskUsernamePassword();
-    }
-
-    public override async Task<LoginStep> Restart()
-    {
-        return await Start();
     }
 
     public virtual async Task<LoginStep> Step(UsernamePasswordAction action)

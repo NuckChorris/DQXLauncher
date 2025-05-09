@@ -13,7 +13,7 @@ public abstract class PlayerListItem
 {
     public virtual Symbol Icon => Symbol.Help;
     public virtual string Text => null!;
-    public abstract Task<LoginStrategy> GetLoginStrategy();
+    public virtual LoginStrategy LoginStrategy => null!;
 }
 
 public class SavedPlayerItem : PlayerListItem
@@ -21,22 +21,14 @@ public class SavedPlayerItem : PlayerListItem
     public required SavedPlayer<PlayerCredential> Player { get; init; }
     public override Symbol Icon => Symbol.Contact;
     public override string Text => Player.Name ?? $"Player {Player.Number}";
-
-    public override async Task<LoginStrategy> GetLoginStrategy()
-    {
-        return await Player.GetLoginStrategy();
-    }
+    public override SavedPlayerLoginStrategy LoginStrategy => Player.LoginStrategy;
 }
 
 public class NewPlayerItem : PlayerListItem
 {
     public override Symbol Icon => Symbol.AddFriend;
     public override string Text => "New Player";
-
-    public override Task<LoginStrategy> GetLoginStrategy()
-    {
-        return Task.FromResult(new NewPlayerLoginStrategy() as LoginStrategy);
-    }
+    public override NewPlayerLoginStrategy LoginStrategy => new();
 }
 
 /*

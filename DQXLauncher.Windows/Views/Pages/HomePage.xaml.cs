@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using DQXLauncher.Core.Game.LoginStrategy;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using DQXLauncher.Windows.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 
@@ -18,21 +16,9 @@ public sealed partial class HomePage : Page
 
     private async void PlayerList_OnPlayerSelected(object? sender, PlayerListView.PlayerSelectedEventArgs e)
     {
-        if (e.Item is SavedPlayerItem savedPlayer)
-        {
-            var strategy = new SavedPlayerLoginStrategy();
-            ViewModel.IsLoading = true;
-            ViewModel.Start(strategy, await strategy.Start(savedPlayer.Player.Token));
-            ViewModel.IsLoading = false;
-            Debug.WriteLine("Stepping saved strategy");
-        }
-        else if (e.Item is NewPlayerItem)
-        {
-            var strategy = new NewPlayerLoginStrategy();
-            ViewModel.IsLoading = true;
-            ViewModel.Start(strategy, await strategy.Start());
-            ViewModel.IsLoading = false;
-            Debug.WriteLine("Stepping Guest strategy");
-        }
+        var strategy = e.Item.LoginStrategy;
+        ViewModel.IsLoading = true;
+        ViewModel.Start(strategy, await strategy.Start());
+        ViewModel.IsLoading = false;
     }
 }
